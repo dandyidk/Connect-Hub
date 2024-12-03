@@ -14,7 +14,9 @@ public class Task4 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
+        Content cont = new Content("shit");
+        Story content = new Story(1, 3, cont);
+        System.out.println(content.createContent().getText());
     }
     
 }
