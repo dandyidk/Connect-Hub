@@ -27,7 +27,7 @@ public class Story extends ContentMedia{
         json.put("Author ID",Integer.toString(this.authorId));
         json.put("timeStamp",this.timeStamp.getTime().toString());
         json.put("Content Text",this.content.getText());
-        json.put("Content Text",this.content.getImage());
+        json.put("Is Expired",Boolean.toString(isExpired()));
 
         return json;
     }
