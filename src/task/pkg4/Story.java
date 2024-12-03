@@ -21,4 +21,15 @@ public class Story extends ContentMedia{
         }
         return false;
     }
+    public JSON createContent(){
+        JSON json = new JSON();
+        json.put("Content ID",Integer.toString(this.contentId));
+        json.put("Author ID",Integer.toString(this.authorId));
+        json.put("timeStamp",this.timeStamp.getTime().toString());
+        json.put("Content Text",this.content.getText());
+        json.put("Content Text",this.content.getImage());
+
+        return json;
+    }
+
 }

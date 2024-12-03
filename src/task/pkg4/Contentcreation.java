@@ -5,14 +5,8 @@
 
 package task.pkg4;
 
-import java.util.Calendar;
 
 
-public class Contentcreation {
-    public ContentMedia createContent(int contentID,Calendar timeStamp, int authorId,Content content){
-        return new ContentMedia(contentID,authorId,timeStamp,content);
-    }
-    public ContentMedia createContent(int contentID, int authorId,Content content){
-        return new ContentMedia(contentID,authorId,content);
-    }
+public interface Contentcreation {
+    public JSON createContent();
 }
