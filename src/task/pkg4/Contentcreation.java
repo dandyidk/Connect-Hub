@@ -8,5 +8,5 @@ package task.pkg4;
 
 
 public interface Contentcreation {
-    public JSON createContent();
+    public void createContent();
 }

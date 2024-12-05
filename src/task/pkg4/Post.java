@@ -1,27 +1,31 @@
 package task.pkg4;
 
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class Post extends ContentMedia implements Contentcreation{
     
-    public Post(int contentId,int authorId,Calendar timeStamp,Content content){
+    public Post(String contentId,String authorId,Date timeStamp,Content content){
         super(contentId, authorId, timeStamp, content);
 
 
     }
-    public Post(int contentId,int authorId,Content content){
+    public Post(String contentId,String authorId,Content content){
         super(contentId, authorId, content);
     }
-    public JSON createContent(){
+    public Post(String authorId,Content content){
+        super(authorId, content);
+    }
+    public void createContent(){
 
-        JSON json = new JSON();
-        json.put("Content ID",Integer.toString(this.contentId));
-        json.put("Author ID",Integer.toString(this.authorId));
-        json.put("timeStamp",this.timeStamp.getTime().toString());
+        json json = new json();
+        json.put("Content ID",this.contentId);
+        json.put("Author ID",this.authorId);
+        json.put("timeStamp",this.timeStamp.toString());
         json.put("Content Text",this.content.getText());
-        json.put("Content Text",this.content.getImage());
+        json.put("Content Image",this.content.getImage());
+        json.submitContent(authorId);
 
-        return json;
     }
 }

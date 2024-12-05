@@ -5,31 +5,34 @@
 package task.pkg4;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class Story extends ContentMedia{
-    public Story(int contentId,int authorId,Calendar timeStamp,Content content){
+    public Story(String contentId,String authorId,Date timeStamp,Content content){
         super(contentId, authorId, timeStamp, content);
     }
-    public Story(int contentId,int authorId,Content content){
+    public Story(String contentId,String authorId,Content content){
         super(contentId, authorId, content);
     }
-    public boolean isExpired(){
-        Calendar temp = (Calendar) this.timeStamp.clone();
-        temp.add(Calendar.DAY_OF_MONTH,1);
-        if (Calendar.getInstance().compareTo(temp)>0){
+    public Story(String authorId,Content content){
+        super( authorId, content);
+    }
+    public boolean isExpired(){ 
+        if (System.currentTimeMillis() >= this.timeStamp.getTime() + 24 * 60 * 60 * 1000){
             return true;
         }
         return false;
     }
-    public JSON createContent(){
-        JSON json = new JSON();
-        json.put("Content ID",Integer.toString(this.contentId));
-        json.put("Author ID",Integer.toString(this.authorId));
-        json.put("timeStamp",this.timeStamp.getTime().toString());
+    public void createContent(){
+        json json = new json();
+        json.put("Content ID",this.contentId);
+        json.put("Author ID",this.authorId);
+        json.put("timeStamp",this.timeStamp.toString());
         json.put("Content Text",this.content.getText());
+        json.put("Content Image",this.content.getImage());
         json.put("Is Expired",Boolean.toString(isExpired()));
 
-        return json;
+        json.submitContent(this.authorId);
     }
 
 }
