@@ -25,7 +25,7 @@ public class Post extends ContentMedia implements Contentcreation{
         json.put("timeStamp",this.timeStamp.toString());
         json.put("Content Text",this.content.getText());
         json.put("Content Image",this.content.getImage());
-        json.submitContent(authorId);
+        json.submitArray(authorId,"Content");
 
     }
 }

@@ -32,7 +32,7 @@ public class Story extends ContentMedia{
         json.put("Content Image",this.content.getImage());
         json.put("Is Expired",Boolean.toString(isExpired()));
 
-        json.submitContent(this.authorId);
+        json.submitArray(this.authorId,"Content");
     }
 
 }

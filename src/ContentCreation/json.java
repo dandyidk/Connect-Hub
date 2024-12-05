@@ -85,7 +85,7 @@ public class json implements FILELOCATION {
     }
 
     @SuppressWarnings("unchecked")
-    public void submitContent(String authorId) {
+    public void submitArray(String authorId,String key) {
         File file = new File(DATABASE);
         try {
             FileReader fileReader = new FileReader(file); // check if file is there
@@ -107,9 +107,9 @@ public class json implements FILELOCATION {
             for (int i = 0; i < temparray.size(); i++) {
                 JSONObject temp = (JSONObject) temparray.get(i);
                 if (((String) temp.get("User Id")).compareTo(authorId) == 0) {
-                    JSONArray tempArray2 = (JSONArray) temp.get("Content");
+                    JSONArray tempArray2 = (JSONArray) temp.get(key);
                     tempArray2.add(js);
-                    temp.put("Content", tempArray2);
+                    temp.put(key, tempArray2);
                 }
             }
 

@@ -5,5 +5,5 @@
 package ContentCreation;
 
 public interface FILELOCATION {
-    String DATABASE = "/home/dandy/Desktop/Connect hub/Connect-Hub/DataBase/users"+".json";
+    String DATABASE = "/home/dandy/Desktop/Connect hub/Connect-Hub/DATABASE/users.json";
 }
