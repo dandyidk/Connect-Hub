@@ -4,7 +4,6 @@
  */
 package task.pkg4;
 
-import java.util.HashMap;
 
 import org.json.simple.JSONArray;
 
@@ -24,14 +23,13 @@ public class Profile {
     protected JSONArray profile;
     protected JSONArray friendRequests;
 
-    public Profile(String userId, String email, String username, String hashedpassword, String dateOfBirth, String status,JSONArray contents) {
+    public Profile(String userId, String email, String username, String hashedpassword, String dateOfBirth, String status) {
         this.userId = userId;
         this.email = email;
         this.username = username;
         this.hashedpassword = hashedpassword;
         this.dateOfBirth = dateOfBirth;
         this.status = status;
-        this.contents = contents;
     }
     public Profile( String email, String username, String hashedpassword, String dateOfBirth) {
         this.email = email;

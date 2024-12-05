@@ -41,7 +41,6 @@ public class json implements FILELOCATION {
             br.write(temp.toString());
             br.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -151,7 +150,8 @@ public class json implements FILELOCATION {
 
                 Profile profile = new Profile((String) temp.get("User Id"), (String) temp.get("Email"),
                         (String) temp.get("Username"), (String) temp.get("HashedPassword"),
-                        (String) temp.get("Date of Birth"), (String) temp.get("Status"), tempar);
+                        (String) temp.get("Date of Birth"), (String) temp.get("Status"));
+                        profile.setContents(tempar);
                 profiles.put((String) temp.get("User Id"), profile);
 
             }
