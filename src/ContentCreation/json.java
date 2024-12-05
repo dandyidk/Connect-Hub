@@ -146,12 +146,16 @@ public class json implements FILELOCATION {
 
             for (int i = 0; i < temparray.size(); i++) {
                 JSONObject temp = (JSONObject) temparray.get(i);
-                JSONArray tempar = (JSONArray) temp.get("Content");
+                JSONArray tempar1 = (JSONArray) temp.get("Content");
+                JSONArray tempar2 = (JSONArray) temp.get("Friends");
+                JSONArray tempar3 = (JSONArray) temp.get("Friend Requests");
+                JSONArray tempar4 = (JSONArray) temp.get("Profile");
 
                 Profile profile = new Profile((String) temp.get("User Id"), (String) temp.get("Email"),
                         (String) temp.get("Username"), (String) temp.get("HashedPassword"),
                         (String) temp.get("Date of Birth"), (String) temp.get("Status"));
-                        profile.setContents(tempar);
+                        profile.setContents(tempar1);
+                        profile.setFriends(tempar2);
                 profiles.put((String) temp.get("User Id"), profile);
 
             }
