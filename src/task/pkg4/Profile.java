@@ -20,6 +20,9 @@ public class Profile {
     protected String dateOfBirth;
     protected String status;
     protected JSONArray contents;
+    protected JSONArray friends;
+    protected JSONArray profile;
+    protected JSONArray friendRequests;
 
     public Profile(String userId, String email, String username, String hashedpassword, String dateOfBirth, String status,JSONArray contents) {
         this.userId = userId;
