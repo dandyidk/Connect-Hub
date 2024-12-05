@@ -18,7 +18,7 @@ import org.json.simple.JSONObject;
  */
 public class ContentCreationDialogue extends javax.swing.JDialog {
     String image = null;
-    User user;
+    Profile user;
     HashMap<String ,Profile> profiles;
 
     /**
@@ -28,7 +28,7 @@ public class ContentCreationDialogue extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
     }
-    public ContentCreationDialogue(java.awt.Frame parent, boolean modal,User user) {
+    public ContentCreationDialogue(java.awt.Frame parent, boolean modal,Profile user) {
         super(parent, modal);
         this.user = user;
         this.profiles = json.readProfiles();
@@ -136,7 +136,7 @@ public class ContentCreationDialogue extends javax.swing.JDialog {
         if(type.compareTo("Post")==0){
             Post post = new Post(user.getUserId(),content);
             JSONArray tempar = json.readProfiles().get(user.getUserId()).getContents();
-            
+            try{
             for(int i =0;i<999;i++){
                 if(((String)((JSONObject)tempar.get(i)).get("Content ID")).compareTo(Integer.toString(i))==0){ //to create unique ids
                     continue;
@@ -144,7 +144,13 @@ public class ContentCreationDialogue extends javax.swing.JDialog {
                 post.setContentId(Integer.toString(i));
                 break;
             }
+        }catch(IndexOutOfBoundsException e){
+            post.setContentId("0");
+        }
             post.createContent();
+            Message m = new Message(null, true,"Post posted successfully!");
+            m.setLocationRelativeTo(this);
+            m.setVisible(true);
         }
         if(type.compareTo("Story")==0){
             Story story = new Story(user.getUserId(),content);
@@ -155,12 +161,16 @@ public class ContentCreationDialogue extends javax.swing.JDialog {
                 if(((String)((JSONObject)tempar.get(i)).get("Content ID")).compareTo(Integer.toString(i))==0){ //to create unique ids
                     continue;
                 }
+                
             }catch(IndexOutOfBoundsException e){
             }
                 story.setContentId(Integer.toString(i));
                 break;
             }
             story.createContent();
+            Message m = new Message(null, true,"Story posted successfully!");
+            m.setLocationRelativeTo(this);
+            m.setVisible(true);
         }
     }                                        
 

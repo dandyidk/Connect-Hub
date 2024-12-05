@@ -5,7 +5,7 @@
 package ContentCreation;
 
 
-
+    
 public class Content {
     private String text;
     private String image;
