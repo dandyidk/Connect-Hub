@@ -282,12 +282,16 @@ public class NewsFeedPage extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void NextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NextActionPerformed
+        try{
         this.iterator = (this.iterator+1)%this.contents.size();
+        }catch(Exception e){}
         showPost(this.contents.get(this.iterator));
     }//GEN-LAST:event_NextActionPerformed
 
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed
+        try{
         this.iterator = Math.abs((this.iterator-1)%this.contents.size());
+        }catch(Exception e){}
         showPost(this.contents.get(this.iterator));
     }//GEN-LAST:event_BackActionPerformed
 

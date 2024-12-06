@@ -33,7 +33,7 @@ public class FriendRequests implements FriendRequestsInterface, FILELOCATION {
     public void sendFriendRequest() {
         JSONArray friends = sender.getFriends();
         for(int i =0;i<friends.size();i++){
-            if(((Friend)friends.get(i)).getUserId().compareTo(reciever.getUserId())==0){
+            if((((String)((JSONObject)friends.get(i)).get("Friend ID"))).compareTo(reciever.getUserId())==0){
                 return;
             }
         }
@@ -108,7 +108,7 @@ public class FriendRequests implements FriendRequestsInterface, FILELOCATION {
     }
 
     public void removeFriendRequestStatus() {
-        this.status = "Remove";
+        this.status = "Removed";
         updateFriendRequests();
     }
 

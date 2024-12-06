@@ -34,6 +34,7 @@ public class NewsFeed implements NewsFeedEngine {
         ArrayList<Friend> friends = fetchFriends();
         ArrayList<ContentMedia> contents = new ArrayList<ContentMedia>(); // all contents
         for (int i = 0; i < friendsArray.size(); i++) {
+
             Profile profile = profiles.get(friends.get(i).getUserId());
             JSONArray friendContents = (profile).getContents(); // getting tht friend contents
 
