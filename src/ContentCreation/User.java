@@ -22,14 +22,9 @@ public class User extends Profile implements Service{
     }
     
     public void signup(){
+        json j = new json();
 
-        json j=new json();
-       for(int i=0;i<999;i++){
-           if(!(unique.containsKey(Integer.toString(i)))){
-               this.userId=Integer.toString(i);
-               break;
-           }
-       }
+       this.userId = Integer.toString(json.readProfiles().size());
        this.status = "Online";
        j.put("User Id",this.userId);
        j.put("Username",this.username);

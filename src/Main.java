@@ -10,8 +10,8 @@ import NewsFeed.NewsFeedPage;
 import UserManagementSystem.Firstpage;
 public class Main {
     public static void main(String[] args) {
-        NewsFeedPage fp = new NewsFeedPage(json.readProfiles().get("1"));
-        fp.setTitle("News Feed");
+        Firstpage fp = new Firstpage();
+        fp.setTitle("FirstPage");
         fp.setVisible(true);
     }
 }

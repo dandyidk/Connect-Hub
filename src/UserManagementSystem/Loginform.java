@@ -4,6 +4,13 @@
  */
 package UserManagementSystem;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import ContentCreation.Profile;
+import ContentCreation.json;
+import NewsFeed.NewsFeedPage;
+
 /**
  *
  * @author ahmed
@@ -14,6 +21,7 @@ public class Loginform extends javax.swing.JFrame {
         initComponents();
     }
 
+    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -109,10 +117,38 @@ public class Loginform extends javax.swing.JFrame {
         } else if (Validation.isvalidEmail(email) == false) {
             Message m = new Message(this, true, "invalid email");
             m.setVisible(true);
+        } else if (Validation.isvalidEmail(email) == false) {
+            Message m = new Message(this, true, "Invalid: Email Address Can't Be Empty");
+            m.setVisible(true);
         } else {
-            profilePage p = new profilePage();
-            p.setVisible(true);
+            password = PasswordHasher.hashPassword(password);
+            HashMap<String, Profile> profiles = json.readProfiles();
+            boolean loginSuccessful = false;
+            Profile user = new User(email, email, password, password);
+
+            for (int i = 0; i < json.readProfiles().size(); i++) {
+                if (email.compareTo(profiles.get(Integer.toString(i)).getEmail()) == 0
+                        || password.compareTo(profiles.get(Integer.toString(i)).getHashedpassword()) == 0) {
+                            user = profiles.get(Integer.toString(i));
+                    loginSuccessful = true;
+                    break;
+                }
+            }
+            if (loginSuccessful) {
+                User us=new User(user.getUserId(),user.getEmail(), user.getUsername(), user.getHashedpassword(), user.getDateOfBirth(),user.isStatus());
+                us.login();
+                Message m = new Message(this, true, "Login Successful!");
+                m.setVisible(true);
+                NewsFeedPage nf = new NewsFeedPage(user);
+                nf.setTitle("News Feed");
+                nf.setVisible(true);
+                dispose();
+            } else {
+                Message m = new Message(this, true, "Invalid email or password.");
+                m.setVisible(true);
+            }
         }
+
     }// GEN-LAST:event_LoginbtnActionPerformed
 
     private void BackbtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BackbtnActionPerformed

@@ -25,13 +25,12 @@ public class User extends Profile implements Service{
     
     public void signup(){
        json j=new json();
-       for(int i=0;i<999;i++){
-           if(json.readProfiles().containsKey(Integer.toString(i))){
-            continue;
-           }
-           break;
+       try{
+       this.userId=Integer.toString(json.readProfiles().size());
+       }catch(Exception e){
+        this.userId ="0";
        }
-       this.status = "Online";
+       this.status = "Offline";
        j.put("User Id",this.userId);
        j.put("Username",this.username);
        j.put("Email",this.email);
@@ -41,7 +40,15 @@ public class User extends Profile implements Service{
        j.submitProfile();
     }
     public void login(){
-        
+        this.status = "Online";
+        json j= new json();
+        j.put("User Id",this.userId);
+       j.put("Username",this.username);
+       j.put("Email",this.email);
+       j.put("HashedPassword", this.hashedpassword);
+       j.put("Date of Birth", this.dateOfBirth);
+       j.put("Status",this.status);
+       j.submitProfile();
     }
     
 }

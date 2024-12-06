@@ -11,6 +11,7 @@ import javax.swing.ImageIcon;
 import ContentCreation.ContentCreationDialogue;
 import ContentCreation.ContentMedia;
 import ContentCreation.Profile;
+import ContentCreation.json;
 import FriendManagement.Friend;
 
 /**
@@ -288,7 +289,15 @@ public class NewsFeedPage extends javax.swing.JFrame {
     }//GEN-LAST:event_BackActionPerformed
 
     private void LogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutActionPerformed
-        // TODO add your handling code here:
+        this.user.setStatus("Offline");
+        json j= new json();
+        j.put("User Id",this.user.getUserId());
+       j.put("Username",this.user.getUsername());
+       j.put("Email",this.user.getEmail());
+       j.put("HashedPassword", this.user.getHashedpassword());
+       j.put("Date of Birth", this.user.getDateOfBirth());
+       j.put("Status",this.user.isStatus());
+       j.submitProfile();
     }//GEN-LAST:event_LogoutActionPerformed
 
     private void ViewProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewProfileActionPerformed
@@ -304,7 +313,7 @@ public class NewsFeedPage extends javax.swing.JFrame {
         ImageIcon img = new ImageIcon(content.getContent().getImage());
         
         Image.setIcon(img);
-        jLabel1.setText(content.getContent().getText());
+        jLabel1.setText("Made by: "+json.readProfiles().get(content.getUserId()).getUsername()+" on"+content.getTimeStamp()+"\n"+content.getContent().getText());
     }
     private void showFriends(){
         String text = "";

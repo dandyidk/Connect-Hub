@@ -152,6 +152,7 @@ public class SignUpform extends javax.swing.JFrame {
             m.setVisible(true);
        }
     }else{
+        password = PasswordHasher.hashPassword(password);
        User u=new User(email,username,password,dob);
        u.setStatus("Offline");
        Message m=new Message(this,true,"Successfully signed in");

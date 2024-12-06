@@ -67,6 +67,13 @@ public class json implements FILELOCATION {
             FileWriter fr = new FileWriter(file, false);
             BufferedWriter br = new BufferedWriter(fr);
             JSONArray temparray = (JSONArray) jsonObject.get("Users");
+            for(int i = 0;i<temparray.size();i++){
+                JSONObject object = (JSONObject) temparray.get(i);
+                if (((String)object.get("User Id")).compareTo((String)js.get("User Id"))==0){
+                    temparray.remove(i);
+                    break;
+                }
+            }
             JSONArray emptyarray = new JSONArray();
             js.put("Content", emptyarray);
             js.put("Profile", emptyarray);
