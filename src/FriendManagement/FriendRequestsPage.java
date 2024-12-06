@@ -139,6 +139,7 @@ public class FriendRequestsPage extends javax.swing.JDialog {
         Message m = new Message(null,true,"Friend Request accepted");
         m.setLocationRelativeTo(this);
         m.setVisible(true);
+        this.iterator =0;
     }//GEN-LAST:event_AcceptActionPerformed
 
     private void RemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RemoveActionPerformed
@@ -148,6 +149,7 @@ public class FriendRequestsPage extends javax.swing.JDialog {
         Message m = new Message(null,true,"Friend Request Removed");
         m.setLocationRelativeTo(this);
         m.setVisible(true);
+        this.iterator = 0;
     }//GEN-LAST:event_RemoveActionPerformed
 
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed

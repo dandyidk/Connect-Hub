@@ -61,7 +61,6 @@ public final class ProfileManagement {
 
                     try (FileWriter file = new FileWriter(filePath)) {
                         file.write(jsonData.toJSONString());
-                        System.out.println(fieldKey + " updated successfully.");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -198,21 +197,19 @@ public final class ProfileManagement {
     }
     
 
-    // New method to view profile picture, cover picture, and bio
     public static JSONObject getUserProfile(String filePath, int userId) {
-        JSONObject jsonData = jsonObjReader(filePath);  // Assuming this reads the file correctly
+        JSONObject jsonData = jsonObjReader(filePath);  
         if (jsonData != null) {
             JSONArray usersArray = (JSONArray) jsonData.get("Users");
   
-            // Debugging - print users to check structure
             System.out.println("Users Array: " + usersArray);
             for (Object userObject : usersArray) {
                 JSONObject user = (JSONObject) userObject;
     
-                // Use string comparison to match user ID
+                // use string comparison to match user ID
                 String userIdString = (String) user.get("User Id");
                 if (userIdString != null && userIdString.equals(String.valueOf(userId))) {
-                    return user;  // Return the user's profile
+                    return user; 
                 }
             }
         }

@@ -166,7 +166,7 @@ public class json implements FILELOCATION {
                     JSONArray tempArray2 = (JSONArray) temp.get(key); //getting the array
                     for(int j = 0;j<tempArray2.size();j++){
                         JSONObject temp2 = (JSONObject) tempArray2.get(j); //loop every object
-                        if(((String)temp2.get(key)).compareTo(ID)==0){
+                        if(((String)temp2.get(keyID)).compareTo(ID)==0){
                             tempArray2.remove(j);
                         }
                     }
