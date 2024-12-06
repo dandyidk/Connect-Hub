@@ -5,14 +5,13 @@
 package ContentCreation;
 
 
-import java.util.HashMap;
+
 
 /**
  *
  * @author ahmed
  */
 public class User extends Profile implements Service{
-    private HashMap<String,Profile> unique=new HashMap<String,Profile>();
     public User(String userId, String email, String username, String hashedpassword, String dateOfBirth, String status) {
         super(userId, email, username, hashedpassword, dateOfBirth, status);
     }

@@ -13,6 +13,9 @@ import ContentCreation.ContentMedia;
 import ContentCreation.Profile;
 import ContentCreation.json;
 import FriendManagement.Friend;
+import FriendManagement.FriendManagementPage;
+import ProfileManagement.ProfileGUI;
+
 
 /**
  *
@@ -22,7 +25,7 @@ public class NewsFeedPage extends javax.swing.JFrame {
     private ArrayList<ContentMedia> contents;
     private ArrayList<Friend> friends;
     private ArrayList<Profile> suggesstions;
-    private Profile user;
+    private String user;
     private int iterator;
     /**
      * Creates new form NewJFrame
@@ -30,7 +33,7 @@ public class NewsFeedPage extends javax.swing.JFrame {
     public NewsFeedPage() {
         initComponents();
     }
-    public NewsFeedPage(Profile user) {
+    public NewsFeedPage(String user) {
         NewsFeed ns = new NewsFeed(user);
         this.contents = ns.fetchContent();
         this.friends = ns.fetchFriends();
@@ -256,7 +259,7 @@ public class NewsFeedPage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void PostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PostActionPerformed
-        ContentCreationDialogue d = new ContentCreationDialogue(this,true,this.user);
+        ContentCreationDialogue d = new ContentCreationDialogue(this,true,json.readProfiles().get(user));
         d.setTitle("Create new content");
         d.setVisible(true);
     }//GEN-LAST:event_PostActionPerformed
@@ -275,7 +278,7 @@ public class NewsFeedPage extends javax.swing.JFrame {
     }//GEN-LAST:event_RefreshActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void NextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NextActionPerformed
@@ -289,23 +292,31 @@ public class NewsFeedPage extends javax.swing.JFrame {
     }//GEN-LAST:event_BackActionPerformed
 
     private void LogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutActionPerformed
-        this.user.setStatus("Offline");
+        Profile profile = json.readProfiles().get(user);
+        profile.setStatus("Offline");
         json j= new json();
-        j.put("User Id",this.user.getUserId());
-       j.put("Username",this.user.getUsername());
-       j.put("Email",this.user.getEmail());
-       j.put("HashedPassword", this.user.getHashedpassword());
-       j.put("Date of Birth", this.user.getDateOfBirth());
-       j.put("Status",this.user.isStatus());
+        j.put("User Id",profile.getUserId());
+       j.put("Username",profile.getUsername());
+       j.put("Email",profile.getEmail());
+       j.put("HashedPassword", profile.getHashedpassword());
+       j.put("Date of Birth", profile.getDateOfBirth());
+       j.put("Status",profile.isStatus());
        j.submitProfile();
+       dispose();
     }//GEN-LAST:event_LogoutActionPerformed
 
     private void ViewProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewProfileActionPerformed
-        // TODO add your handling code here:
+        ProfileGUI p = new ProfileGUI(Integer.parseInt(user));
+        p.setLocationRelativeTo(this);
+        p.setVisible(true);
+
     }//GEN-LAST:event_ViewProfileActionPerformed
 
     private void Post1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Post1ActionPerformed
-        // TODO add your handling code here:
+        FriendManagementPage fr = new FriendManagementPage(this, true,json.readProfiles().get(user));
+        fr.setTitle("Friend Management");
+        fr.setLocationRelativeTo(this);
+        fr.setVisible(true);
     }//GEN-LAST:event_Post1ActionPerformed
 
 
@@ -318,14 +329,16 @@ public class NewsFeedPage extends javax.swing.JFrame {
     private void showFriends(){
         String text = "";
         for(Friend friend: friends){
+            if(friend.getStatus().compareTo("Friends")==0){
             text = text + friend.getUsername()+"  :  "+friend.isStatus()+"\n";
+            }
         }
         jTextArea1.setText(text);
     }
     private void showSuggestedFriends(){
         String text = "";
         for(Profile friend: this.suggesstions){
-            text = text + friend.getUsername()+"\n";
+            text = text + friend.getUsername()+"\n\n";
         }
         jTextArea2.setText(text);
     }

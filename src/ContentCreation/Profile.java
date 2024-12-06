@@ -67,6 +67,9 @@ public class Profile {
     public void setFriends(JSONArray friends) {
         this.friends = friends;
     }
+    public void setFriendRequests(JSONArray friends) {
+        this.friendRequests = friends;
+    }
     public String getUserId() {
         return userId;
     }
@@ -93,7 +96,14 @@ public class Profile {
     public JSONArray getFriends() {
         return friends;
     }
+    public JSONArray getFriendsRequests() {
+        return friendRequests;
+    }
     public String isStatus() {
         return status;
     }
+    public void setProfile(JSONArray profile) {
+        this.profile = profile;
+    }
 }
+

@@ -4,7 +4,6 @@
  */
 package UserManagementSystem;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import ContentCreation.Profile;
@@ -21,7 +20,7 @@ public class Loginform extends javax.swing.JFrame {
         initComponents();
     }
 
-    @SuppressWarnings("unchecked")
+
     // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -128,7 +127,7 @@ public class Loginform extends javax.swing.JFrame {
 
             for (int i = 0; i < json.readProfiles().size(); i++) {
                 if (email.compareTo(profiles.get(Integer.toString(i)).getEmail()) == 0
-                        || password.compareTo(profiles.get(Integer.toString(i)).getHashedpassword()) == 0) {
+                        && password.compareTo(profiles.get(Integer.toString(i)).getHashedpassword()) == 0) {
                             user = profiles.get(Integer.toString(i));
                     loginSuccessful = true;
                     break;
@@ -139,7 +138,7 @@ public class Loginform extends javax.swing.JFrame {
                 us.login();
                 Message m = new Message(this, true, "Login Successful!");
                 m.setVisible(true);
-                NewsFeedPage nf = new NewsFeedPage(user);
+                NewsFeedPage nf = new NewsFeedPage(user.getUserId());
                 nf.setTitle("News Feed");
                 nf.setVisible(true);
                 dispose();
