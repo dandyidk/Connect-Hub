@@ -67,6 +67,22 @@ public class json implements FILELOCATION {
             FileWriter fr = new FileWriter(file, false);
             BufferedWriter br = new BufferedWriter(fr);
             JSONArray temparray = (JSONArray) jsonObject.get("Users");
+
+            for(int i = 0;i<temparray.size();i++){
+                JSONObject object = (JSONObject) temparray.get(i);
+                if (((String)object.get("User Id")).compareTo((String)js.get("User Id"))==0){
+                    temparray.remove(i);
+                    js.put("Content",(JSONArray)object.get("Content"));
+                    js.put("Profile",(JSONArray)object.get("Profile"));
+                    js.put("Friend Requests",(JSONArray)object.get("Friend Requests"));
+                    js.put("Friends",(JSONArray)object.get("Friends"));
+                    temparray.add(js);
+                    jsonObject.put("Users", temparray);
+                    br.write(jsonObject.toString());
+                    br.close();
+                    return;
+                }
+            }
             JSONArray emptyarray = new JSONArray();
             js.put("Content", emptyarray);
             js.put("Profile", emptyarray);
@@ -102,12 +118,58 @@ public class json implements FILELOCATION {
         try {
             Object obj = parser.parse(new FileReader(DATABASE));
             jsonObject = (JSONObject) obj;
-            JSONArray temparray = (JSONArray) jsonObject.get("Users");
+            JSONArray temparray = (JSONArray) jsonObject.get("Users"); //getting all users
 
             for (int i = 0; i < temparray.size(); i++) {
-                JSONObject temp = (JSONObject) temparray.get(i);
-                if (((String) temp.get("User Id")).compareTo(authorId) == 0) {
-                    JSONArray tempArray2 = (JSONArray) temp.get(key);
+                JSONObject temp = (JSONObject) temparray.get(i); //getting each user
+                if (((String) temp.get("User Id")).compareTo(authorId) == 0) { //check if the user is the user we wwant
+                    JSONArray tempArray2 = (JSONArray) temp.get(key); //getting the array
+                    tempArray2.add(js);
+                    temp.put(key, tempArray2);
+                }
+            }
+
+            FileWriter fr = new FileWriter(file, false);
+            BufferedWriter br = new BufferedWriter(fr);
+            br.write(jsonObject.toString());
+            br.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @SuppressWarnings("unchecked")
+    public void submitArray(String authorId,String key,String keyID,String ID) { //same as last method but it removes dublicate of keyID
+        File file = new File(DATABASE);
+        try {
+            FileReader fileReader = new FileReader(file); // check if file is there
+            fileReader.close();
+
+        } catch (FileNotFoundException e) {
+            createJson();
+        } catch (IOException e) {
+            System.out.println("Error");
+        }
+
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            Object obj = parser.parse(new FileReader(DATABASE));
+            jsonObject = (JSONObject) obj;
+            JSONArray temparray = (JSONArray) jsonObject.get("Users"); //getting all users
+
+            for (int i = 0; i < temparray.size(); i++) {
+                JSONObject temp = (JSONObject) temparray.get(i); //getting each user
+                if (((String) temp.get("User Id")).compareTo(authorId) == 0) { //check if the user is the user we wwant
+                    JSONArray tempArray2 = (JSONArray) temp.get(key); //getting the array
+                    for(int j = 0;j<tempArray2.size();j++){
+                        JSONObject temp2 = (JSONObject) tempArray2.get(j); //loop every object
+                        if(((String)temp2.get(key)).compareTo(ID)==0){
+                            tempArray2.remove(j);
+                        }
+                    }
                     tempArray2.add(js);
                     temp.put(key, tempArray2);
                 }
@@ -156,6 +218,8 @@ public class json implements FILELOCATION {
                         (String) temp.get("Date of Birth"), (String) temp.get("Status"));
                         profile.setContents(tempar1);
                         profile.setFriends(tempar2);
+                        profile.setFriendRequests(tempar3);
+                        profile.setProfile(tempar4);
                 profiles.put((String) temp.get("User Id"), profile);
 
             }

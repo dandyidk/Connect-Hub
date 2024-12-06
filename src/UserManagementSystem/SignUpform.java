@@ -125,7 +125,7 @@ public class SignUpform extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void passwordFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordFieldActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_passwordFieldActionPerformed
 
     private void BackbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackbtnActionPerformed
@@ -152,9 +152,10 @@ public class SignUpform extends javax.swing.JFrame {
             m.setVisible(true);
        }
     }else{
+        password = PasswordHasher.hashPassword(password);
        User u=new User(email,username,password,dob);
        u.setStatus("Offline");
-       Message m=new Message(this,true,"Successfully signed in");
+       Message m=new Message(this,true,"Successfully signed up");
             m.setVisible(true);
        u.signup();
 

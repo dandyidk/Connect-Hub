@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.HashMap;
 
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -180,6 +181,7 @@ public class ContentCreationDialogue extends javax.swing.JDialog {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         JFileChooser fileChooser = new javax.swing.JFileChooser(System.getProperty("user.dir"));
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg"));
         int rVal = fileChooser.showSaveDialog(this);
         if (rVal == JFileChooser.APPROVE_OPTION) {
             try {

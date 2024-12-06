@@ -23,10 +23,10 @@ public class NewsFeed implements NewsFeedEngine {
     private Profile user;
     private JSONArray friendsArray;
 
-    public NewsFeed(Profile user) {
+    public NewsFeed(String user) {
         profiles = json.readProfiles();
-        this.user = user;
-        this.friendsArray = user.getFriends();
+        this.user = json.readProfiles().get(user);
+        this.friendsArray = this.user.getFriends();
     }
 
     @Override
@@ -53,7 +53,7 @@ public class NewsFeed implements NewsFeedEngine {
                 try {
                     cal.setTime(sdf.parse((String) contentInfo.get("timeStamp")));
                 } catch (ParseException e) {
-                    // TODO Auto-generated catch block
+
                     e.printStackTrace();
                 }
 
@@ -71,7 +71,13 @@ public class NewsFeed implements NewsFeedEngine {
         for (int i = 0; i < friendsArray.size(); i++) {
             JSONObject friendInfo = (JSONObject) friendsArray.get(i); // info of each friend
             Profile friend = profiles.get(friendInfo.get("Friend ID")); // getting the friend :D
-            Friend friendss = new Friend(friend.getUserId(), friend.getEmail(), friend.getUsername(),friend.getHashedpassword(), friend.getDateOfBirth(), "Friends");
+            String status="";
+            for(int j =0;i<user.getFriends().size();i++){
+                if(((String)((JSONObject)(this.user.getFriends().get(j))).get("Friend ID")).compareTo(friend.getUserId())==0){
+                    status = ((String)((JSONObject)(this.user.getFriends().get(j))).get("Friend Status"));
+                }
+            }
+            Friend friendss = new Friend(friend.getUserId(), friend.getEmail(), friend.getUsername(),friend.getHashedpassword(), friend.getDateOfBirth(),status,friend.isStatus());
             friends.add( friendss);
         }
         return friends;
@@ -89,7 +95,8 @@ public class NewsFeed implements NewsFeedEngine {
                 }
             }
             if(flag){
-                if(user.getUserId().compareTo(profiles.get(Integer.toString(i)).getUserId())!=0){
+                if(this.user.getUserId().compareTo(profiles.get(Integer.toString(i)).getUserId())!=0){
+
                     friendSug.add(profiles.get(Integer.toString(i)));
                 }
             }
