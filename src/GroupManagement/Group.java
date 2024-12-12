@@ -2,11 +2,9 @@ package GroupManagement;
 
 import java.util.ArrayList;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import ContentCreation.ContentMedia;
-import ContentCreation.Profile;
+
 import ContentCreation.json;
 
 public class Group {
@@ -19,13 +17,13 @@ public class Group {
     private ContentMedia[] contents;
     private int id;
     private GroupRequest[] requests;
+    private String[] removedId;
 
     public Group(String name, String description, String groupPhoto, PrimaryGroupAdmin primaryAdmin) {
         this.name = name;
         this.description = description;
         this.groupPhoto = groupPhoto;
         this.primaryAdmin = primaryAdmin;
-        this.users = users;
         this.id = 1;
         this.primaryAdmin.setGroup(this);
 
@@ -72,6 +70,9 @@ public class Group {
     public void setId(String Id) {
         this.id = Integer.parseInt(Id);
     }
+    public void setRemovedId(String[] Id) {
+        this.removedId = Id;
+    }
 
     public String getDescription() {
         return this.description;
@@ -103,6 +104,10 @@ public class Group {
 
     public int getId() {
         return this.id;
+
+    }
+    public String[] getRemovedId() {
+        return this.removedId;
 
     }
 

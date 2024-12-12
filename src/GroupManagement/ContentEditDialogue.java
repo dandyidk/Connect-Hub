@@ -141,7 +141,6 @@ public class ContentEditDialogue extends javax.swing.JDialog {
 
             Post post = new Post(user.getUserId(),content);
             post.setContentId(this.post.getContentId());
-            ContentMedia[] tempar = json.readGroups().get(Integer.toString(group.getId())).getContents();
             try{
 
         }catch(IndexOutOfBoundsException e){

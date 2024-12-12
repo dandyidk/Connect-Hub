@@ -19,4 +19,7 @@ public class GroupUser extends Profile {
     public void setGroup(Group group){
         this.group = group;
     }
+    public Group getGroup(Group group){
+        return group;
+    }
 }

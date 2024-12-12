@@ -172,6 +172,7 @@ public class GroupCreatorDialogue extends javax.swing.JDialog {
         GroupContentManagement gp = new GroupContentManagement(null, true,group,user);
         gp.setLocationRelativeTo(this);
         gp.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_ManagePostsActionPerformed
 
     private void deleteGRoupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteGRoupActionPerformed
@@ -209,6 +210,7 @@ public class GroupCreatorDialogue extends javax.swing.JDialog {
             Message m = new Message(null, true,"Insufficient permissions to demote another admin");
             m.setLocationRelativeTo(this);
             m.setVisible(true);
+            
         }
     }//GEN-LAST:event_DemoteActionPerformed
 
@@ -255,6 +257,7 @@ public class GroupCreatorDialogue extends javax.swing.JDialog {
         jr.setTitle("Requests");
         jr.setLocationRelativeTo(this);
         jr.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_JOinRequestsActionPerformed
 
     /**

@@ -8,12 +8,14 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
+import ContentCreation.Content;
 import ContentCreation.ContentCreationDialogue;
 import ContentCreation.ContentMedia;
 import ContentCreation.Profile;
 import ContentCreation.json;
 import FriendManagement.Friend;
 import FriendManagement.FriendManagementPage;
+import GroupManagement.Group;
 import GroupManagement.GroupManagementDialogue;
 import ProfileManagement.ProfileGUI;
 
@@ -26,6 +28,9 @@ public class NewsFeedPage extends javax.swing.JFrame {
     private ArrayList<ContentMedia> contents;
     private ArrayList<Friend> friends;
     private ArrayList<Profile> suggesstions;
+    private ArrayList<Group> groupsuggesstions;
+    private ArrayList<Group> groups;
+
     private String user;
     private int iterator;
     /**
@@ -39,7 +44,9 @@ public class NewsFeedPage extends javax.swing.JFrame {
         this.contents = ns.fetchContent();
         this.friends = ns.fetchFriends();
         this.suggesstions = ns.fetchFriendsSuggesstion();
+        this.groupsuggesstions=ns.fetchGroupSuggesstions();
         this.user = user;
+        this.groups= json.readProfiles().get(user).getGroups();
         initComponents();
         this.iterator =0;
         try{
@@ -48,6 +55,8 @@ public class NewsFeedPage extends javax.swing.JFrame {
         }
         showFriends();
         showSuggestedFriends();
+        showSuggestedGroups();
+        showGroups();
 
     }
 
@@ -66,7 +75,7 @@ public class NewsFeedPage extends javax.swing.JFrame {
         Refresh = new javax.swing.JButton();
         jTextField2 = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        FriendSuggesstoins = new javax.swing.JTextArea();
         Image = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         Next = new javax.swing.JButton();
@@ -75,6 +84,14 @@ public class NewsFeedPage extends javax.swing.JFrame {
         ViewProfile = new javax.swing.JButton();
         Post1 = new javax.swing.JButton();
         Post2 = new javax.swing.JButton();
+        jTextField4 = new javax.swing.JTextField();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        GroupSuggesstions = new javax.swing.JTextArea();
+        jTextField5 = new javax.swing.JTextField();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        FriendLIst = new javax.swing.JTextArea();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -117,11 +134,11 @@ public class NewsFeedPage extends javax.swing.JFrame {
             }
         });
 
-        jTextArea2.setEditable(false);
-        jTextArea2.setBackground(new java.awt.Color(222, 222, 222));
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane3.setViewportView(jTextArea2);
+        FriendSuggesstoins.setEditable(false);
+        FriendSuggesstoins.setBackground(new java.awt.Color(222, 222, 222));
+        FriendSuggesstoins.setColumns(20);
+        FriendSuggesstoins.setRows(5);
+        jScrollPane3.setViewportView(FriendSuggesstoins);
 
         Image.setToolTipText("");
         Image.setVerticalAlignment(javax.swing.SwingConstants.TOP);
@@ -163,7 +180,7 @@ public class NewsFeedPage extends javax.swing.JFrame {
         });
 
         Post1.setBackground(new java.awt.Color(102, 51, 255));
-        Post1.setText("Friends Management");
+        Post1.setText("Friends");
         Post1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Post1ActionPerformed(evt);
@@ -171,59 +188,117 @@ public class NewsFeedPage extends javax.swing.JFrame {
         });
 
         Post2.setBackground(new java.awt.Color(102, 51, 255));
-        Post2.setText("Groups management");
+        Post2.setText("Groups");
         Post2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Post2ActionPerformed(evt);
             }
         });
 
+        jTextField4.setEditable(false);
+        jTextField4.setBackground(new java.awt.Color(51, 102, 255));
+        jTextField4.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
+        jTextField4.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextField4.setText("Group Suggestions");
+        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField4ActionPerformed(evt);
+            }
+        });
+
+        GroupSuggesstions.setEditable(false);
+        GroupSuggesstions.setBackground(new java.awt.Color(222, 222, 222));
+        GroupSuggesstions.setColumns(20);
+        GroupSuggesstions.setRows(5);
+        jScrollPane4.setViewportView(GroupSuggesstions);
+
+        jTextField5.setEditable(false);
+        jTextField5.setBackground(new java.awt.Color(51, 102, 255));
+        jTextField5.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
+        jTextField5.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextField5.setText("Group List");
+
+        FriendLIst.setEditable(false);
+        FriendLIst.setBackground(new java.awt.Color(222, 222, 222));
+        FriendLIst.setColumns(20);
+        FriendLIst.setRows(5);
+        jScrollPane5.setViewportView(FriendLIst);
+
+        jButton1.setBackground(new java.awt.Color(0, 153, 255));
+        jButton1.setText("search");
+        jButton1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(0, 0, 204), java.awt.Color.cyan, null, null));
+        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jButton1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButton1.setOpaque(true);
+
+        jButton2.setBackground(new java.awt.Color(102, 51, 255));
+        jButton2.setText("Notification");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Post1)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE))
-                    .addComponent(Post2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(962, 962, 962)
-                        .addComponent(Refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(Logout, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jTextField3)
+                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                                        .addComponent(jTextField5)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(Post1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addGap(17, 17, 17)
+                                            .addComponent(Post2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(10, 10, 10)))
+                                    .addComponent(jButton2))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(Back, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(Next))
-                            .addComponent(Image, javax.swing.GroupLayout.PREFERRED_SIZE, 854, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(Next)
+                                .addGap(37, 37, 37))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 867, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 954, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(Image, javax.swing.GroupLayout.PREFERRED_SIZE, 950, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(238, 238, 238)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 867, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(Refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(Logout, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 17, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(Post)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ViewProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(4, 4, 4))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(Post)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(ViewProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(4, 4, 4))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addContainerGap())))))))
+                                    .addComponent(jTextField4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap())))))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addContainerGap(1201, Short.MAX_VALUE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(4, 4, 4)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -231,38 +306,54 @@ public class NewsFeedPage extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(Image, javax.swing.GroupLayout.PREFERRED_SIZE, 506, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(Back)
-                            .addComponent(Next, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(58, 58, 58))
-                    .addGroup(layout.createSequentialGroup()
+                            .addComponent(Post1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton1)
+                            .addComponent(Post2, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(11, 11, 11)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(Logout, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(Refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(Post, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(ViewProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(Image, javax.swing.GroupLayout.PREFERRED_SIZE, 538, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jScrollPane3))
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(Back)
+                                    .addComponent(Next, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(52, 52, 52))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(Post1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(Post2, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(11, 11, 11)
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap())))
+                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(11, 11, 11)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(Logout, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(Post, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ViewProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(527, 527, 527)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(16, Short.MAX_VALUE)))
         );
 
         pack();
@@ -279,12 +370,18 @@ public class NewsFeedPage extends javax.swing.JFrame {
         this.contents = ns.fetchContent();
         this.friends = ns.fetchFriends();
         this.suggesstions = ns.fetchFriendsSuggesstion();
+        this.groupsuggesstions = ns.fetchGroupSuggesstions();
+        this.groups = json.readProfiles().get(user).getGroups();
         this.iterator =0;
         try{
         showPost(contents.get(this.iterator));
-        }catch(IndexOutOfBoundsException e){}
+        }catch(IndexOutOfBoundsException e){
+            showPost(new ContentMedia(null,null,null,new Content(null, null)));
+        }
         showFriends();
         showSuggestedFriends();
+        showSuggestedGroups();
+        showGroups();
     }//GEN-LAST:event_RefreshActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
@@ -292,17 +389,21 @@ public class NewsFeedPage extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void NextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NextActionPerformed
+        if(this.contents.size()!=0){
         try{
         this.iterator = (this.iterator+1)%this.contents.size();
         }catch(Exception e){}
         showPost(this.contents.get(this.iterator));
+    }
     }//GEN-LAST:event_NextActionPerformed
 
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed
+        if(this.contents.size()!=0){
         try{
         this.iterator = Math.abs((this.iterator-1)%this.contents.size());
         }catch(Exception e){}
         showPost(this.contents.get(this.iterator));
+    }
     }//GEN-LAST:event_BackActionPerformed
 
     private void LogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutActionPerformed
@@ -341,12 +442,20 @@ public class NewsFeedPage extends javax.swing.JFrame {
         gp.setVisible(true);
     }//GEN-LAST:event_Post2ActionPerformed
 
+    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField4ActionPerformed
+
 
     private void showPost(ContentMedia content){
         ImageIcon img = new ImageIcon(content.getContent().getImage());
                                                                                                                                                                                     
         Image.setIcon(img);
+        try{
         jLabel1.setText("Made by: "+json.readProfiles().get(content.getUserId()).getUsername()+" on"+content.getTimeStamp()+"\n"+content.getContent().getText());
+        }catch(Exception e){
+            jLabel1.setText("");
+        }
     }
     private void showFriends(){
         String text = "";
@@ -355,6 +464,15 @@ public class NewsFeedPage extends javax.swing.JFrame {
             text = text + friend.getUsername()+"  :  "+friend.isStatus()+"\n";
             }
         }
+        FriendLIst.setText(text);
+    }
+    private void showGroups(){
+        String text = "";
+        for(Group group: this.groups){
+           
+            text = text + group.getName()+"\n\n";
+            
+        }
         jTextArea1.setText(text);
     }
     private void showSuggestedFriends(){
@@ -362,7 +480,14 @@ public class NewsFeedPage extends javax.swing.JFrame {
         for(Profile friend: this.suggesstions){
             text = text + friend.getUsername()+"\n\n";
         }
-        jTextArea2.setText(text);
+        FriendSuggesstoins.setText(text);
+    }
+    private void showSuggestedGroups(){
+        String text = "";
+        for(Group group: this.groupsuggesstions){
+            text = text + group.getName()+"\n\n";
+        }
+        GroupSuggesstions.setText(text);
     }
     /**
      * @param args the command line arguments
@@ -401,6 +526,9 @@ public class NewsFeedPage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Back;
+    private javax.swing.JTextArea FriendLIst;
+    private javax.swing.JTextArea FriendSuggesstoins;
+    private javax.swing.JTextArea GroupSuggesstions;
     private javax.swing.JLabel Image;
     private javax.swing.JButton Logout;
     private javax.swing.JButton Next;
@@ -409,12 +537,17 @@ public class NewsFeedPage extends javax.swing.JFrame {
     private javax.swing.JButton Post2;
     private javax.swing.JButton Refresh;
     private javax.swing.JButton ViewProfile;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField jTextField5;
     // End of variables declaration//GEN-END:variables
 }

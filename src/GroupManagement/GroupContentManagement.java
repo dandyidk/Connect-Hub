@@ -202,6 +202,7 @@ public class GroupContentManagement extends javax.swing.JDialog {
         ContentEditDialogue ce = new ContentEditDialogue(null, true,this.profile,this.group,contents[iterator]);
         ce.setLocationRelativeTo(this);
         ce.setVisible(true);
+        dispose();
     }// GEN-LAST:event_EditActionPerformed
 
     /**

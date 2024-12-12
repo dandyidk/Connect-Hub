@@ -4,8 +4,9 @@
  */
 package GroupManagement;
 
-import ContentCreation.ContentCreationDialogue;
+
 import ContentCreation.Profile;
+import UserManagementSystem.Message;
 
 /**
  *
@@ -17,12 +18,14 @@ public class GroupUserDialogue extends javax.swing.JFrame {
      * Creates new form GroupUserDialogue
      */
     private Profile user;
+    private Group group;
     public GroupUserDialogue() {
         initComponents();
     }
 
-    public GroupUserDialogue(Profile user) {
+    public GroupUserDialogue(Profile user,Group group) {
         initComponents();
+        this.group = group;
         this.user=user;
     }
     /**
@@ -78,11 +81,18 @@ public class GroupUserDialogue extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        group.removeUser(new GroupUser(user, group));
+        Message m = new Message(null, true,"You left this group");
+        m.setLocationRelativeTo(this);
+        m.setVisible(true);
+        dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        ContentCreationDialogue ccd = new ContentCreationDialogue(this, true,user); 
+        ContentCreationDialogue ccd = new ContentCreationDialogue(this, true,user,group); 
+        ccd.setLocationRelativeTo(this);
+        ccd.setVisible(true);
+        dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**

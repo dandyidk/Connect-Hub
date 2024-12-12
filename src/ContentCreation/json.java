@@ -410,6 +410,7 @@ public class json implements FILELOCATION {
                 JSONArray tempor = (JSONArray) temp.get("Group Users");
                 ArrayList<GroupUser> users = new ArrayList<GroupUser>();
                 ArrayList<Admin> admins = new ArrayList<Admin>();
+                ArrayList<String> removers = new ArrayList<String>();
                 for (int i = 0; i < tempor.size(); i++) {
                     JSONObject tempora = (JSONObject) tempor.get(i);
                     if (((String) tempora.get("User Status")).compareTo("User") == 0) {
@@ -419,6 +420,8 @@ public class json implements FILELOCATION {
                     } else if (((String) tempora.get("User Status")).compareTo("Admin") == 0) {
                         Admin admini = new Admin(json.readProfiles().get(tempora.get("User Id")), null);
                         admins.add(admini);
+                    }else if (((String) tempora.get("User Status")).compareTo("Removed") == 0) {
+                        removers.add((String) tempora.get("User Id"));
                     }
 
                 }
@@ -433,6 +436,12 @@ public class json implements FILELOCATION {
                 }
                 group.setRequests(req);
                 groups.put((String) temp.get("Group Id"), group);
+
+                String[] removed= new String[removers.size()];
+                for(int i = 0;i<removed.length;i++){
+                    removed[i]= removers.get(i);
+                }
+                group.setRemovedId(removed);
 
             }
 

@@ -141,6 +141,7 @@ public class GroupManagementDialogue extends javax.swing.JFrame {
     }
 
     private void OpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpenActionPerformed
+        try{
         Group group = groups.get(iterator);
         Admin [] adminss =  group.getAdmin();
         for(Admin admin : adminss){
@@ -150,6 +151,7 @@ public class GroupManagementDialogue extends javax.swing.JFrame {
                 gp.setLocationRelativeTo(this);
                 gp.setTitle("Admin UI");
                 gp.setVisible(true);
+                dispose();
             }
         }
         if((group.getPrimaryAdmin().getUserId().compareTo(user.getUserId())==0)){
@@ -158,7 +160,21 @@ public class GroupManagementDialogue extends javax.swing.JFrame {
             gp.setLocationRelativeTo(this);
             gp.setTitle("Primary Admin UI");
             gp.setVisible(true);
+            dispose();
         }
+        for(GroupUser usering: group.getUsers()){
+            if(usering.getUserId().compareTo(this.user.getUserId())==0){
+        
+            GroupUserDialogue gp = new GroupUserDialogue(user,group);
+            gp.setLocationRelativeTo(this);
+            gp.setTitle("User UI");
+            gp.setVisible(true);
+            dispose();
+            }
+        }
+    }catch(IndexOutOfBoundsException e){
+
+    }
         
     }//GEN-LAST:event_OpenActionPerformed
 
@@ -180,12 +196,14 @@ public class GroupManagementDialogue extends javax.swing.JFrame {
      CreateGroupDialogue cr = new CreateGroupDialogue(this.user);
      cr.setLocationRelativeTo(this);
      cr.setVisible(true);
+     dispose();
     }//GEN-LAST:event_createGroupActionPerformed
 
     private void joinGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinGroupActionPerformed
         JoinGroupDialogue jp =  new JoinGroupDialogue(this, true,this.user);
         jp.setLocationRelativeTo(this);
         jp.setVisible(true);
+        dispose();
     }//GEN-LAST:event_joinGroupActionPerformed
 
 

@@ -32,6 +32,7 @@ public class NewsFeed implements NewsFeedEngine {
     @Override
     public ArrayList<ContentMedia> fetchContent() {
         ArrayList<Friend> friends = fetchFriends();
+        ArrayList<Group> groups = user.getGroups();
         ArrayList<ContentMedia> contents = new ArrayList<ContentMedia>(); // all contents
         for (int i = 0; i < friendsArray.size(); i++) {
 
@@ -62,6 +63,13 @@ public class NewsFeed implements NewsFeedEngine {
                 ContentMedia content = new ContentMedia((String) contentInfo.get("Content ID"),
                         (String) contentInfo.get("Author ID"), cal.getTime(), text);
                 contents.add(content);
+            }
+        }
+        for(Group group:groups){
+            for(ContentMedia content:group.getContents()){
+                if(content.getUserId().compareTo(user.getUserId())!=0){
+                contents.add(content);
+                }
             }
         }
         return contents;
@@ -118,6 +126,12 @@ public class NewsFeed implements NewsFeedEngine {
             boolean flag = true;
             for (int i = 0; i < joinedGroups.size(); i++) {
                 if (joinedGroups.get(i).getId()==groupie.getId()) {
+                    flag = false;
+                    break;
+                }
+            }
+            for (int i = 0; i < groupie.getRemovedId().length; i++) {
+                if (groupie.getRemovedId()[i].compareTo(user.getUserId())==0) {
                     flag = false;
                     break;
                 }
