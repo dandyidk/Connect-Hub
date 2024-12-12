@@ -4,7 +4,7 @@ package ContentCreation;
 import java.util.Date;
 
 
-public class Post extends ContentMedia implements Contentcreation{
+public class Post extends ContentMedia implements Contentcreation,Cloneable{
     
     public Post(String contentId,String authorId,Date timeStamp,Content content){
         super(contentId, authorId, timeStamp, content);
