@@ -138,16 +138,10 @@ public class ContentCreationDialogue extends javax.swing.JDialog {
             Post post = new Post(user.getUserId(),content);
             JSONArray tempar = json.readProfiles().get(user.getUserId()).getContents();
             try{
-            for(int i =0;i<999;i++){
-                if(((String)((JSONObject)tempar.get(i)).get("Content ID")).compareTo(Integer.toString(i))==0){ //to create unique ids
-                    continue;
-                }
-                post.setContentId(Integer.toString(i));
-                break;
+            post.setContentId(Integer.toString(tempar.size()));
+            }catch(NullPointerException e){
+                post.setContentId("0");
             }
-        }catch(IndexOutOfBoundsException e){
-            post.setContentId("0");
-        }
             post.createContent();
             Message m = new Message(null, true,"Post posted successfully!");
             m.setLocationRelativeTo(this);

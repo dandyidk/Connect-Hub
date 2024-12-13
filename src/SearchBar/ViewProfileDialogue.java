@@ -9,7 +9,10 @@ import javax.swing.ImageIcon;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import ContentCreation.ContentMedia;
 import ContentCreation.Profile;
+import ContentCreation.json;
+import NewsFeed.NewsFeed;
 
 /**
  *
@@ -17,6 +20,8 @@ import ContentCreation.Profile;
  */
 public class ViewProfileDialogue extends javax.swing.JDialog {
     private Profile profile;
+    private ContentMedia[] contents;
+    private int iterator;
 
     /**
      * Creates new form ViewProfileDialogue
@@ -29,8 +34,12 @@ public class ViewProfileDialogue extends javax.swing.JDialog {
     public ViewProfileDialogue(java.awt.Frame parent, boolean modal, Profile profile) {
         super(parent, modal);
         this.profile = profile;
+        this.contents = profile.getContents2();
+        this.iterator =0;
+
         initComponents();
         showProfile();
+        showPost();
     }
 
     /**
@@ -118,21 +127,51 @@ public class ViewProfileDialogue extends javax.swing.JDialog {
     private void showProfile(){
         try{
         JSONArray profileData= profile.getProfile();
-        ImageIcon  pfp = new ImageIcon((String)((JSONObject)profileData.get(0)).get("Profile Picture"));
+        ImageIcon  pfp = new ImageIcon();
+        ImageIcon  coverPhoto  = new ImageIcon();
+        for(int i = 0;i<profileData.size();i++){
+            if((String)((JSONObject)profileData.get(i)).get("Profile Picture")!=null){
+                pfp = new ImageIcon((String)((JSONObject)profileData.get(i)).get("Profile Picture"));
+            }
+            if((String)((JSONObject)profileData.get(i)).get("Cover Picture")!=null){
+                coverPhoto = new ImageIcon((String)((JSONObject)profileData.get(i)).get("Cover Picture"));
+            }
+        }
+        
         this.ProfilePhot.setIcon(pfp);
-        ImageIcon  coverPhoto = new ImageIcon((String)((JSONObject)profileData.get(0)).get("Cover Picture"));
+        
         this.CoverPhoto.setIcon(coverPhoto);
         }catch(IndexOutOfBoundsException e){
         }
         this.UserName.setText(profile.getUsername());
     }
+    private void showPost(){
+        
+            if(contents.length !=0){
+                if(contents[iterator].getContentId().compareTo("null")!=0){
+            ImageIcon img = new ImageIcon(contents[iterator].getContent().getImage());
+    
+            this.PostImage.setIcon(img);
+            this.ContentText.setText("Made by: " + json.readProfiles().get(contents[iterator].getUserId()).getUsername() + " on"
+                    + contents[iterator].getTimeStamp() + "\n" + contents[iterator].getContent().getText());
+            }
+    
+        }   
+        
+    }
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        if (contents.length != 0 && iterator!=0 ){
+            this.iterator = (this.iterator-1)%contents.length;
+            showPost();
+            }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void NextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NextActionPerformed
-        // TODO add your handling code here:
+        if (contents.length != 0){
+            this.iterator = (this.iterator+1)%contents.length;
+            showPost();
+        }
     }//GEN-LAST:event_NextActionPerformed
 
     /**

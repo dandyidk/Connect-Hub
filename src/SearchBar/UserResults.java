@@ -5,7 +5,7 @@
 package SearchBar;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -14,13 +14,7 @@ import ContentCreation.Profile;
 import ContentCreation.json;
 import FriendManagement.AddingFriendsService;
 import FriendManagement.FriendRequests;
-import GroupManagement.Admin;
-import GroupManagement.Group;
-import GroupManagement.GroupCreatorDialogue;
-import GroupManagement.GroupRequest;
-import GroupManagement.GroupUser;
-import GroupManagement.GroupUserDialogue;
-import GroupManagement.PrimaryGroupAdmin;
+
 import UserManagementSystem.Message;
 
 /**
@@ -166,19 +160,30 @@ public class UserResults extends javax.swing.JDialog {
         JSONArray temp = user.getFriends();
         ArrayList <Profile> friends = new ArrayList<>();
         for(int i = 0;i<temp.size();i++){
-            friends.add(json.readProfiles().get(((JSONObject)temp.get(i)).get("Friend Id")));
+            friends.add(json.readProfiles().get(((JSONObject)temp.get(i)).get("Friend ID")));
+        }
+        
+        if(this.users.get(iterator).getUserId().compareTo(this.user.getUserId())==0){
+                this.AddFriend.setVisible(false);
+                this.RemoveFriend.setVisible(false);
+                this.BlockUser.setVisible(false);
+                flag = false;
         }
         for(Profile friend:friends){
             if(friend.getUserId()==this.users.get(iterator).getUserId()){
                 this.AddFriend.setVisible(false);
                 this.RemoveFriend.setVisible(true);
+                this.BlockUser.setVisible(true);
                 flag = false;
                 break;
             }
+
         }
+
         if(flag){
             this.AddFriend.setVisible(true);
             this.RemoveFriend.setVisible(false);
+            this.BlockUser.setVisible(true);
         }
         this.GroupName.setText(this.users.get(iterator).getUsername());
     }

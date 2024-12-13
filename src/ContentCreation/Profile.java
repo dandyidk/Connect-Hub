@@ -118,6 +118,9 @@ public class Profile {
     public JSONArray getContents() {
         return contents;
     }
+    public ContentMedia[] getContents2() {
+        return contents2;
+    }
     public ArrayList<Group> getGroups() {
         HashMap <String,Group>groups =json.readGroups();
         ArrayList <Group> groupss = new ArrayList<Group>();

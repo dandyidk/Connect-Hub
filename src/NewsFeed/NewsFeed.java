@@ -38,7 +38,7 @@ public class NewsFeed implements NewsFeedEngine {
 
             Profile profile = profiles.get(friends.get(i).getUserId());
             JSONArray friendContents = (profile).getContents(); // getting tht friend contents
-
+            try{
             for (int j = 0; j < friendContents.size(); j++) {
                 JSONObject contentInfo = (JSONObject) friendContents.get(j);
                 try {
@@ -64,6 +64,9 @@ public class NewsFeed implements NewsFeedEngine {
                         (String) contentInfo.get("Author ID"), cal.getTime(), text);
                 contents.add(content);
             }
+        }catch(NullPointerException e){
+            
+        }
         }
         for(Group group:groups){
             for(ContentMedia content:group.getContents()){
