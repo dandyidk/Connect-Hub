@@ -34,44 +34,49 @@ public class NewsFeed implements NewsFeedEngine {
         ArrayList<Friend> friends = fetchFriends();
         ArrayList<Group> groups = user.getGroups();
         ArrayList<ContentMedia> contents = new ArrayList<ContentMedia>(); // all contents
-        for (int i = 0; i < friendsArray.size(); i++) {
+        for (int i = 0; i < friends.size(); i++) {
+            if (friends.get(i).getStatus().compareTo("Friends") == 0) {
 
-            Profile profile = profiles.get(friends.get(i).getUserId());
-            JSONArray friendContents = (profile).getContents(); // getting tht friend contents
-            try{
-            for (int j = 0; j < friendContents.size(); j++) {
-                JSONObject contentInfo = (JSONObject) friendContents.get(j);
+                Profile profile = profiles.get(friends.get(i).getUserId());
+                JSONArray friendContents = (profile).getContents(); // getting tht friend contents
                 try {
-                    if (((String) contentInfo.get("Is Expired")).compareTo("true") == 0) {
-                        break;
+                    for (int j = 0; j < friendContents.size(); j++) {
+                        JSONObject contentInfo = (JSONObject) friendContents.get(j);
+                        try {
+                            if (((String) contentInfo.get("Is Expired")).compareTo("true") == 0) {
+                                break;
+                            }
+                        } catch (NullPointerException e) {
+                        }
+                        Content text = new Content((String) contentInfo.get("Content Text"),
+                                (String) contentInfo.get("Content Image"));
+
+                        Calendar cal = Calendar.getInstance(); // this part is purely to translate time from string to
+                                                               // date,
+                                                               // dont mind it
+                        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+                        try {
+                            cal.setTime(sdf.parse((String) contentInfo.get("timeStamp")));
+                        } catch (ParseException e) {
+
+                            e.printStackTrace();
+                        }
+
+                        ContentMedia content = new ContentMedia((String) contentInfo.get("Content ID"),
+                                (String) contentInfo.get("Author ID"), cal.getTime(), text);
+                        contents.add(content);
+
                     }
+
                 } catch (NullPointerException e) {
+
                 }
-                Content text = new Content((String) contentInfo.get("Content Text"),
-                        (String) contentInfo.get("Content Image"));
-
-                Calendar cal = Calendar.getInstance(); // this part is purely to translate time from string to date,
-                                                       // dont mind it
-                SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
-                try {
-                    cal.setTime(sdf.parse((String) contentInfo.get("timeStamp")));
-                } catch (ParseException e) {
-
-                    e.printStackTrace();
-                }
-
-                ContentMedia content = new ContentMedia((String) contentInfo.get("Content ID"),
-                        (String) contentInfo.get("Author ID"), cal.getTime(), text);
-                contents.add(content);
             }
-        }catch(NullPointerException e){
-            
         }
-        }
-        for(Group group:groups){
-            for(ContentMedia content:group.getContents()){
-                if(content.getUserId().compareTo(user.getUserId())!=0){
-                contents.add(content);
+        for (Group group : groups) {
+            for (ContentMedia content : group.getContents()) {
+                if (content.getUserId().compareTo(user.getUserId()) != 0) {
+                    contents.add(content);
                 }
             }
         }
@@ -85,7 +90,7 @@ public class NewsFeed implements NewsFeedEngine {
             JSONObject friendInfo = (JSONObject) friendsArray.get(i); // info of each friend
             Profile friend = profiles.get(friendInfo.get("Friend ID")); // getting the friend :D
             String status = "";
-            for (int j = 0; i < user.getFriends().size(); i++) {
+            for (int j = 0; j < user.getFriends().size(); j++) {
                 if (((String) ((JSONObject) (this.user.getFriends().get(j))).get("Friend ID"))
                         .compareTo(friend.getUserId()) == 0) {
                     status = ((String) ((JSONObject) (this.user.getFriends().get(j))).get("Friend Status"));
@@ -123,29 +128,28 @@ public class NewsFeed implements NewsFeedEngine {
     public ArrayList<Group> fetchGroupSuggesstions() {
         ArrayList<Group> joinedGroups = user.getGroups();
         HashMap<String, Group> groups = json.readGroups();
-        ArrayList<Group> suggestGroup= new ArrayList<Group>();
+        ArrayList<Group> suggestGroup = new ArrayList<Group>();
 
         for (Group groupie : groups.values()) {
             boolean flag = true;
             for (int i = 0; i < joinedGroups.size(); i++) {
-                if (joinedGroups.get(i).getId()==groupie.getId()) {
+                if (joinedGroups.get(i).getId() == groupie.getId()) {
                     flag = false;
                     break;
                 }
             }
             for (int i = 0; i < groupie.getRemovedId().length; i++) {
-                if (groupie.getRemovedId()[i].compareTo(user.getUserId())==0) {
+                if (groupie.getRemovedId()[i].compareTo(user.getUserId()) == 0) {
                     flag = false;
                     break;
                 }
             }
-            if(flag){
-            suggestGroup.add(groupie);
+            if (flag) {
+                suggestGroup.add(groupie);
             }
 
         }
         return suggestGroup;
     }
-
 
 }

@@ -238,7 +238,9 @@ public class json implements FILELOCATION {
                             tempArray2.remove(j);
                         }
                     }
+                    if(((String)js.get(keyID)).compareTo("null")!=0){
                     tempArray2.add(js);
+                    }
                     temp.remove(key);
                     temp.put(key,tempArray2);
 
