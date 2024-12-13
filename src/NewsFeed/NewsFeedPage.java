@@ -466,7 +466,7 @@ public class NewsFeedPage extends javax.swing.JFrame implements FILELOCATION{
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        NotificationGUI noti = new NotificationGUI(this,true,DATABASE,Integer.parseInt(this.user));
+        NotificationGUI noti = new NotificationGUI(DATABASE,Integer.parseInt(this.user));
         noti.setLocationRelativeTo(this);
         noti.setVisible(true);
 
