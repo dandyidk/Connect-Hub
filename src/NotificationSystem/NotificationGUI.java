@@ -1,29 +1,26 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class NotificationGUI {
-    
-    // Constructor to initialize the GUI
+
     public NotificationGUI(String filePath, int userId) {
-        // Initialize buffers for notifications
         StringBuilder friendRequestsDisplay = new StringBuilder();
         StringBuilder groupUsersDisplay = new StringBuilder();
         StringBuilder notificationsDisplay = new StringBuilder();
+        StringBuilder statusNotificationDisplay = new StringBuilder();
 
-        // Create the main frame
         JFrame frame = new JFrame("Notifications");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 800);
+        frame.setSize(600, 900);
         frame.setLayout(new BorderLayout());
 
-        // Main panel for notifications
         JPanel notificationPanel = new JPanel();
         notificationPanel.setLayout(new BoxLayout(notificationPanel, BoxLayout.Y_AXIS));
 
-        // Text areas for different types of notifications
-        JTextArea friendRequestsArea = new JTextArea(10, 50);
-        friendRequestsArea.setEditable(false);
-        friendRequestsArea.setBorder(BorderFactory.createTitledBorder("Friend Requests"));
+        JPanel friendRequestPanel = new JPanel();
+        friendRequestPanel.setLayout(new BoxLayout(friendRequestPanel, BoxLayout.Y_AXIS));
 
         JTextArea groupUsersArea = new JTextArea(10, 50);
         groupUsersArea.setEditable(false);
@@ -33,58 +30,95 @@ public class NotificationGUI {
         groupPostsArea.setEditable(false);
         groupPostsArea.setBorder(BorderFactory.createTitledBorder("Group Post Notifications"));
 
-        // Add text areas to the notification panel
-        notificationPanel.add(friendRequestsArea);
-        notificationPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Spacing
-        notificationPanel.add(groupUsersArea);
-        notificationPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Spacing
-        notificationPanel.add(groupPostsArea);
+        JTextArea statusNotificationsArea = new JTextArea(10, 50);
+        statusNotificationsArea.setEditable(false);
+        statusNotificationsArea.setBorder(BorderFactory.createTitledBorder("Group Status Change Notifications"));
 
-        JScrollPane friendRequestsScrollPane = new JScrollPane(friendRequestsArea);
+        notificationPanel.add(friendRequestPanel);
+        notificationPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        notificationPanel.add(groupUsersArea);
+        notificationPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        notificationPanel.add(groupPostsArea);
+        notificationPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        notificationPanel.add(statusNotificationsArea);
+
         JScrollPane groupUsersScrollPane = new JScrollPane(groupUsersArea);
         JScrollPane groupPostsScrollPane = new JScrollPane(groupPostsArea);
+        JScrollPane statusNotificationsScrollPane = new JScrollPane(statusNotificationsArea);
 
-        // Add scroll panes to the panel instead of text areas
-        notificationPanel.add(friendRequestsScrollPane);
-        notificationPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         notificationPanel.add(groupUsersScrollPane);
         notificationPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         notificationPanel.add(groupPostsScrollPane);
+        notificationPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        notificationPanel.add(statusNotificationsScrollPane);
 
-
-        // Refresh button
         JButton refreshButton = new JButton("Refresh");
         refreshButton.addActionListener(e -> {
-            // Refresh the notifications
-            Notification.refresh(filePath, userId, friendRequestsDisplay, groupUsersDisplay, notificationsDisplay);
+            Notification.refresh(filePath, userId, friendRequestsDisplay, groupUsersDisplay, notificationsDisplay, statusNotificationDisplay);
 
-            // Update text areas with refreshed data
-            friendRequestsArea.setText(friendRequestsDisplay.toString());
-            groupUsersArea.setText(groupUsersDisplay.toString());
-            groupPostsArea.setText(notificationsDisplay.toString());
-        });
+            friendRequestPanel.removeAll();
+            for (String friendRequest : friendRequestsDisplay.toString().split("\n")) {
+                JPanel requestPanel = new JPanel();
+                requestPanel.setLayout(new FlowLayout());
 
-        // Add components to the frame
-        frame.add(notificationPanel, BorderLayout.CENTER);
-        frame.add(refreshButton, BorderLayout.SOUTH);
+                JLabel requestLabel = new JLabel(friendRequest);
+                JButton acceptButton = new JButton("Accept");
+                JButton deleteButton = new JButton("Delete");
 
-        // Initial refresh to populate data
-        /*Notification.refresh(filePath, userId, friendRequestsDisplay, groupUsersDisplay, notificationsDisplay);
-        friendRequestsArea.setText(friendRequestsDisplay.toString());
-        groupUsersArea.setText(groupUsersDisplay.toString());
-        groupPostsArea.setText(notificationsDisplay.toString());*/
+                // Accept button action listener
+acceptButton.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // Extract profile ID from the label
+        String profileId =Notification.getUserIdFromUsername(filePath,requestLabel.getText().split(":")[1].trim());
+        System.out.println(profileId); 
 
-        // Display the frame
-        frame.setVisible(true);
+        // Call backend method to accept the friend request
+        Notification.acceptFriendRequest(filePath, userId, profileId);
+            // Refresh GUI after successful operation
+            JOptionPane.showMessageDialog(frame, "Friend request accepted: " + profileId);
+            refreshButton.doClick();
+            JOptionPane.showMessageDialog(frame, "Failed to accept friend request: " + profileId);
+
     }
-    
-    // Main method
+});
+
+// Delete button action listener
+deleteButton.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // Extract profile ID from the label
+        String profileId =Notification.getUserIdFromUsername(filePath,requestLabel.getText().split(":")[1].trim());
+
+        // Call backend method to delete the friend request
+        Notification.deleteFriendRequest(filePath, userId, profileId);
+        JOptionPane.showMessageDialog(frame, "Friend request deleted: " + profileId);
+        refreshButton.doClick();
+    }
+});
+requestPanel.add(requestLabel);
+requestPanel.add(acceptButton);
+requestPanel.add(deleteButton);
+friendRequestPanel.add(requestPanel);
+}
+    friendRequestPanel.revalidate();
+    friendRequestPanel.repaint();
+
+    groupUsersArea.setText(groupUsersDisplay.toString());
+    groupPostsArea.setText(notificationsDisplay.toString());
+    statusNotificationsArea.setText(statusNotificationDisplay.toString());
+    });
+
+    frame.add(notificationPanel, BorderLayout.CENTER);
+    frame.add(refreshButton, BorderLayout.SOUTH);
+
+    frame.setVisible(true);
+}
+
     public static void main(String[] args) {
-        // File path and user ID for testing
         String filePath = "C:\\Users\\mohamed\\OneDrive\\Desktop\\final\\profiles.json"; 
         int userId = 2;
 
-        // Create the GUI
         new NotificationGUI(filePath, userId);
     }
 }
