@@ -201,6 +201,7 @@ public class Notification {
                         String authorId = (String) post.get("Author ID");
                         String postText = (String) post.get("Content Text");
                         String timeStamp = (String) post.get("timeStamp");
+                        String postId = (String) post.get("Content ID");
     
                         // Fetch author details
                         String authorName = "Unknown";
@@ -315,14 +316,127 @@ public class Notification {
 
          // Method to accept a friend request
     public static void acceptFriendRequest(String filePath, int userId, String profileId) {
-        FriendRequests fr = new FriendRequests("Pending", profileId, Integer.toString(userId));
-        fr.acceptFriendRequestStatus();
+        JSONObject jsonData = jsonObjReader(filePath);
+        if (jsonData == null) {
+            System.out.println("Error: Unable to read user data.");
+            return;
+        }
+
+        JSONArray usersArray = (JSONArray) jsonData.get("Users");
+        if (usersArray == null || usersArray.isEmpty()) {
+            System.out.println("No users found in the data.");
+            return;
+        }
+
+        // Find the current user by userId
+        JSONObject currentUser = null;
+        for (Object userObject : usersArray) {
+            JSONObject user = (JSONObject) userObject;
+            int id = Integer.parseInt((String) user.get("User Id"));
+            if (id == userId) {
+                currentUser = user;
+                break;
+            }
+        }
+
+        if (currentUser == null) {
+            System.out.println("User with ID " + userId + " not found.");
+            return;
+        }
+
+        // Find the friend requests and the corresponding friend
+        JSONArray friendRequestsArray = (JSONArray) currentUser.get("Friend Requests");
+        JSONArray friendsArray = (JSONArray) currentUser.get("Friends");
+
+        boolean requestFound = false;
+        for (Object requestObject : friendRequestsArray) {
+            JSONObject request = (JSONObject) requestObject;
+            String requestProfileId = (String) request.get("Profile Id");
+
+            if (profileId.equals(requestProfileId)) {
+                // Move the friend request to the "Friends" array
+                JSONObject friend = new JSONObject();
+                friend.put("Profile Id", profileId);
+                friendsArray.add(friend);
+
+                // Remove the accepted friend request from the "Friend Requests" array
+                friendRequestsArray.remove(requestObject);
+                requestFound = true;
+                break;
+            }
+        }
+
+        if (requestFound) {
+            // Save the updated JSON data to the file
+            try (FileWriter file = new FileWriter(filePath)) {
+                file.write(jsonData.toJSONString());
+                file.flush();
+                System.out.println("Friend request accepted.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Friend request from Profile ID " + profileId + " not found.");
+        }
     }
 
     // Method to delete a friend request
     public static void deleteFriendRequest(String filePath, int userId, String profileId) {
-        FriendRequests friendRequests =new FriendRequests("Pending",profileId,Integer.toString(userId));
-        friendRequests.removeFriendRequestStatus();
+        JSONObject jsonData = jsonObjReader(filePath);
+        if (jsonData == null) {
+            System.out.println("Error: Unable to read user data.");
+            return;
+        }
+
+        JSONArray usersArray = (JSONArray) jsonData.get("Users");
+        if (usersArray == null || usersArray.isEmpty()) {
+            System.out.println("No users found in the data.");
+            return;
+        }
+
+        // Find the current user by userId
+        JSONObject currentUser = null;
+        for (Object userObject : usersArray) {
+            JSONObject user = (JSONObject) userObject;
+            int id = Integer.parseInt((String) user.get("User Id"));
+            if (id == userId) {
+                currentUser = user;
+                break;
+            }
+        }
+
+        if (currentUser == null) {
+            System.out.println("User with ID " + userId + " not found.");
+            return;
+        }
+
+        // Find the friend requests and remove the specified one
+        JSONArray friendRequestsArray = (JSONArray) currentUser.get("Friend Requests");
+        boolean requestFound = false;
+        for (Object requestObject : friendRequestsArray) {
+            JSONObject request = (JSONObject) requestObject;
+            String requestProfileId = (String) request.get("Profile Id");
+
+            if (profileId.equals(requestProfileId)) {
+                // Remove the friend request
+                friendRequestsArray.remove(requestObject);
+                requestFound = true;
+                break;
+            }
+        }
+
+        if (requestFound) {
+            // Save the updated JSON data to the file
+            try (FileWriter file = new FileWriter(filePath)) {
+                file.write(jsonData.toJSONString());
+                file.flush();
+                System.out.println("Friend request deleted.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Friend request from Profile ID " + profileId + " not found.");
+        }
     }
     // Method to get user ID from username
     public static String getUserIdFromUsername(String filePath, String username) {
@@ -353,6 +467,9 @@ public class Notification {
         System.out.println("User with username '" + username + "' not found.");
         return null;
     }
+
+
+    
 
     public static void main(String[] args) {
         String filePath = "C:\\Users\\mohamed\\OneDrive\\Desktop\\final\\profiles.json"; // Update with the correct path
