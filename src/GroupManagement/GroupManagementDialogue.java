@@ -202,6 +202,7 @@ public class GroupManagementDialogue extends javax.swing.JFrame {
     private void joinGroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinGroupActionPerformed
         JoinGroupDialogue jp =  new JoinGroupDialogue(this, true,this.user);
         jp.setLocationRelativeTo(this);
+        jp.setTitle("Group Suggesstions");
         jp.setVisible(true);
         dispose();
     }//GEN-LAST:event_joinGroupActionPerformed

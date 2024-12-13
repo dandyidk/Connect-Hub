@@ -169,7 +169,7 @@ public class GroupCreatorDialogue extends javax.swing.JDialog {
     }
 
     private void ManagePostsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ManagePostsActionPerformed
-        GroupContentManagement gp = new GroupContentManagement(null, true,group,user);
+        GroupContentManagement gp = new GroupContentManagement(null, true,group,user,true);
         gp.setLocationRelativeTo(this);
         gp.setVisible(true);
         this.dispose();

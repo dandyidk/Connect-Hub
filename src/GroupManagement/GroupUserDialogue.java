@@ -89,7 +89,8 @@ public class GroupUserDialogue extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        ContentCreationDialogue ccd = new ContentCreationDialogue(this, true,user,group); 
+        GroupContentManagement ccd = new GroupContentManagement(this, true,group,user,false); 
+        
         ccd.setLocationRelativeTo(this);
         ccd.setVisible(true);
         dispose();

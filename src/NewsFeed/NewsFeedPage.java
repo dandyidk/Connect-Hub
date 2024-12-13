@@ -18,6 +18,7 @@ import FriendManagement.FriendManagementPage;
 import GroupManagement.Group;
 import GroupManagement.GroupManagementDialogue;
 import ProfileManagement.ProfileGUI;
+import SearchBar.SearchBar;
 
 
 /**
@@ -230,6 +231,11 @@ public class NewsFeedPage extends javax.swing.JFrame {
         jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         jButton1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jButton1.setOpaque(true);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setBackground(new java.awt.Color(102, 51, 255));
         jButton2.setText("Notification");
@@ -445,6 +451,12 @@ public class NewsFeedPage extends javax.swing.JFrame {
     private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField4ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        SearchBar sb = new SearchBar(null, true,json.readProfiles().get(user));
+        sb.setLocationRelativeTo(this);
+        sb.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     private void showPost(ContentMedia content){

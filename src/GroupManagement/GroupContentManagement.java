@@ -26,12 +26,13 @@ public class GroupContentManagement extends javax.swing.JDialog {
     private Profile profile;
     private ContentMedia[] contents;
     private int iterator;
+    private boolean isCreator;
     public GroupContentManagement(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
 
-    public GroupContentManagement(java.awt.Frame parent, boolean modal, Group group, Profile profile) {
+    public GroupContentManagement(java.awt.Frame parent, boolean modal, Group group, Profile profile,boolean isCreator) {
         super(parent, modal);
         this.group = group;
         this.profile = profile;
@@ -49,6 +50,7 @@ public class GroupContentManagement extends javax.swing.JDialog {
         }
         this.iterator =0;
         initComponents();
+        this.isCreator = isCreator;
         showPost();
     }
 
@@ -167,6 +169,11 @@ public class GroupContentManagement extends javax.swing.JDialog {
         }
 
     }
+    
+        this.Delete.setVisible(isCreator);
+        this.Edit.setVisible(isCreator);
+        
+    
     }
 
     private void AddPostActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_AddPostActionPerformed
@@ -184,7 +191,7 @@ public class GroupContentManagement extends javax.swing.JDialog {
     }// GEN-LAST:event_NextActionPerformed
 
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_BackActionPerformed
-        if (contents.length != 0){
+        if (contents.length != 0 && iterator!=0 ){
             this.iterator = (this.iterator-1)%contents.length;
             showPost();
             }

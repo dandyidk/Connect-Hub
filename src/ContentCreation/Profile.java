@@ -154,6 +154,9 @@ public class Profile {
     public void setProfile(JSONArray profile) {
         this.profile = profile;
     }
+    public JSONArray getProfile() {
+        return this.profile;
+    }
 
     public void constructGroup(String name,String description,String groupPhoto,Profile[] users){
         this.gp = new GroupBuilder(this);
