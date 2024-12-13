@@ -11,12 +11,14 @@ import javax.swing.ImageIcon;
 import ContentCreation.Content;
 import ContentCreation.ContentCreationDialogue;
 import ContentCreation.ContentMedia;
+import ContentCreation.FILELOCATION;
 import ContentCreation.Profile;
 import ContentCreation.json;
 import FriendManagement.Friend;
 import FriendManagement.FriendManagementPage;
 import GroupManagement.Group;
 import GroupManagement.GroupManagementDialogue;
+import NotificationSystem.NotificationGUI;
 import ProfileManagement.ProfileGUI;
 import SearchBar.SearchBar;
 
@@ -25,7 +27,7 @@ import SearchBar.SearchBar;
  *
  * @author dandy
  */
-public class NewsFeedPage extends javax.swing.JFrame {
+public class NewsFeedPage extends javax.swing.JFrame implements FILELOCATION{
     private ArrayList<ContentMedia> contents;
     private ArrayList<Friend> friends;
     private ArrayList<Profile> suggesstions;
@@ -239,6 +241,11 @@ public class NewsFeedPage extends javax.swing.JFrame {
 
         jButton2.setBackground(new java.awt.Color(102, 51, 255));
         jButton2.setText("Notification");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -457,6 +464,13 @@ public class NewsFeedPage extends javax.swing.JFrame {
         sb.setLocationRelativeTo(this);
         sb.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        NotificationGUI noti = new NotificationGUI(this,true,DATABASE,Integer.parseInt(this.user));
+        noti.setLocationRelativeTo(this);
+        noti.setVisible(true);
+
+    }//GEN-LAST:event_jButton2ActionPerformed
 
 
     private void showPost(ContentMedia content){

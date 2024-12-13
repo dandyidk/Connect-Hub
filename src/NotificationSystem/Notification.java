@@ -1,9 +1,13 @@
+package NotificationSystem;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import FriendManagement.FriendRequests;
+
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class Notification {
@@ -46,6 +50,7 @@ public class Notification {
                 currentUser = user;
                 break;
             }
+            
         }
 
         if (currentUser == null) {
@@ -56,7 +61,7 @@ public class Notification {
         // Fetch friend requests for the user
         JSONArray friendRequestsArray = (JSONArray) currentUser.get("Friend Requests");
         if (friendRequestsArray == null || friendRequestsArray.isEmpty()) {
-            friendRequestsDisplay.append("No friend requests found for user ID: ").append(userId).append("\n");
+            friendRequestsDisplay.append("No friend requests found for you").append("\n");
             return;
         }
 
@@ -223,43 +228,141 @@ public class Notification {
         }
     }
 
-    public static void refresh(String filePath, int userId, 
-                                StringBuilder friendRequestsDisplay, 
-                                StringBuilder groupUsersDisplay, 
-                                StringBuilder notificationsDisplay) {
+
+       // Method to check group status change and notify
+       public static void checkGroupStatusChange(String filePath, int userId, StringBuilder notificationsDisplay) {
+        JSONObject jsonData = jsonObjReader(filePath);
+        if (jsonData == null) {
+            notificationsDisplay.append("Error: Unable to read data.\n");
+            return;
+        }
+    
+        JSONArray groupsArray = (JSONArray) jsonData.get("Groups");
+        if (groupsArray == null || groupsArray.isEmpty()) {
+            notificationsDisplay.append("No groups found.\n");
+            return;
+        }
+    
+        JSONArray usersArray = (JSONArray) jsonData.get("Users");
+        if (usersArray == null || usersArray.isEmpty()) {
+            notificationsDisplay.append("No users found.\n");
+            return;
+        }
+            
+        // Iterate over groups and check for status changes
+        for (Object groupObject : groupsArray) {
+            JSONObject group = (JSONObject) groupObject;
+            
+            // Get group details
+            String groupName = (String) group.get("Group Name");
+            JSONArray groupUsers = (JSONArray) group.get("Group Users");
+    
+            // Check if user is part of the group
+            boolean userInGroup = false;
+            for (Object groupUserObject : groupUsers) {
+                JSONObject groupUser = (JSONObject) groupUserObject;
+                int groupUserId = Integer.parseInt((String) groupUser.get("User Id"));
+                if (groupUserId == userId) {
+                    userInGroup = true;
+                    break;
+                }
+            }
+    
+            // If user is not part of the group, skip this group
+            if (!userInGroup) {
+                continue;
+            }
+    
+            // Proceed with status change check only if the user is in the group
+            String currentStatus = (String) group.get("Group Description");
+            String previousStatus = (String) group.get("Previos Group Description");
+    
+            // If there's a status change
+            // If there's a status change
+            if (previousStatus != null && !previousStatus.equals(currentStatus)) {
+                notificationsDisplay.append("Group '").append(groupName).append("' status changed from '")
+                        .append(previousStatus).append("' to '").append(currentStatus).append("'.\n");
+            }
+
+            // Update previous status for future comparisons
+            group.remove("Previos Group Description");
+            group.put("Previos Group Description", currentStatus);
+        }
+    
+        // Save the updated JSON data with new "Previous Status" fields
+        try (FileWriter file = new FileWriter(filePath)) {
+            file.write(jsonData.toJSONString());
+            file.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+
+    public static void refresh(String filePath, int userId, StringBuilder friendRequestsDisplay, StringBuilder groupUsersDisplay, StringBuilder notificationsDisplay,StringBuilder statusNotificationDisplay) {
         // Clear previous displays
         friendRequestsDisplay.setLength(0);
         groupUsersDisplay.setLength(0);
         notificationsDisplay.setLength(0);
+        statusNotificationDisplay.setLength(0);
 
         // Fetch updated data
         getUserRequests(filePath, userId, friendRequestsDisplay);
         getGroupUsers(filePath, userId, groupUsersDisplay);
         getGroupPostNotifications(filePath, userId, notificationsDisplay);
+        checkGroupStatusChange(filePath,userId, statusNotificationDisplay);
+        }
+
+         // Method to accept a friend request
+    public static void acceptFriendRequest(String filePath, int userId, String profileId) {
+        FriendRequests fr = new FriendRequests("Pending", profileId, Integer.toString(userId));
+        fr.acceptFriendRequestStatus();
+    }
+
+    // Method to delete a friend request
+    public static void deleteFriendRequest(String filePath, int userId, String profileId) {
+        FriendRequests friendRequests =new FriendRequests("Pending",profileId,Integer.toString(userId));
+        friendRequests.removeFriendRequestStatus();
+    }
+    // Method to get user ID from username
+    public static String getUserIdFromUsername(String filePath, String username) {
+        JSONObject jsonData = jsonObjReader(filePath);
+
+        if (jsonData == null) {
+            System.out.println("Error: Unable to read user data.");
+            return null;
+        }
+
+        JSONArray usersArray = (JSONArray) jsonData.get("Users");
+        if (usersArray == null || usersArray.isEmpty()) {
+            System.out.println("No users found in the data.");
+            return null;
+        }
+
+        // Iterate through the users array to find the user by username
+        for (Object userObject : usersArray) {
+            JSONObject user = (JSONObject) userObject;
+            String userUsername = (String) user.get("Username");
+
+            if (username.equalsIgnoreCase(userUsername)) {
+                return (String) user.get("User Id");
+            }
+        }
+
+        // Return null if no user with the specified username is found
+        System.out.println("User with username '" + username + "' not found.");
+        return null;
     }
 
     public static void main(String[] args) {
         String filePath = "C:\\Users\\mohamed\\OneDrive\\Desktop\\final\\profiles.json"; // Update with the correct path
         int userId = 2; // Replace with the user ID you want to test
-    
-        // Buffers for displaying notifications
-        StringBuilder friendRequestsDisplay = new StringBuilder();
-        StringBuilder groupUsersDisplay = new StringBuilder();
-        StringBuilder notificationsDisplay = new StringBuilder();
-    
-        // Initial refresh
-        Notification.refresh(filePath, userId, friendRequestsDisplay, groupUsersDisplay, notificationsDisplay);
-    
-        // Display refreshed data
-        System.out.println("Friend Requests:");
-        System.out.println(friendRequestsDisplay);
-    
-        System.out.println("Group Users:");
-        System.out.println(groupUsersDisplay);
-    
-        System.out.println("Group Post Notifications:");
-        System.out.println(notificationsDisplay);
+
+        // Example: Accepting a friend request
+        acceptFriendRequest(filePath, userId, "3");  // Accept friend request from profile ID "3"
+
+        // Example: Deleting a friend request
+        deleteFriendRequest(filePath, userId, "1");  // Delete friend request from profile ID "3"
     }
-    
     
 }
