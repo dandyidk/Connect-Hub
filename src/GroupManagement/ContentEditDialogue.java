@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
-package ContentCreation;
+package GroupManagement;
 
 import java.io.File;
 import java.util.HashMap;
@@ -10,29 +10,40 @@ import java.util.HashMap;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import ContentCreation.Content;
+import ContentCreation.ContentMedia;
+import ContentCreation.Message;
+import ContentCreation.Post;
+import ContentCreation.Profile;
+import ContentCreation.json;
 
 /**
  *
  * @author dandy
  */
-public class ContentCreationDialogue extends javax.swing.JDialog {
-    String image = null;
-    Profile user;
-    HashMap<String ,Profile> profiles;
+public class ContentEditDialogue extends javax.swing.JDialog {
+    private String image = null;
+    private Profile user;
+    private Group group;
+    private HashMap<String ,Profile> profiles;
+    private ContentMedia post;
+    
 
     /**
      * Creates new form ContentCreationDialogue
      */
-    public ContentCreationDialogue(java.awt.Frame parent, boolean modal) {
+    public ContentEditDialogue(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
-    public ContentCreationDialogue(java.awt.Frame parent, boolean modal,Profile user) {
+    public ContentEditDialogue(java.awt.Frame parent, boolean modal,Profile user,Group group,ContentMedia post) {
         super(parent, modal);
         this.user = user;
         this.profiles = json.readProfiles();
+        this.group= group;
+        this.post = post;
+        this.image= post.getContent().getImage();
+
         initComponents();
     }
 
@@ -49,16 +60,17 @@ public class ContentCreationDialogue extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
+
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
+        jTextArea1.setText(post.getContent().getText());
         jScrollPane1.setViewportView(jTextArea1);
 
         jButton1.setBackground(new java.awt.Color(0, 0, 255));
-        jButton1.setText("Post");
+        jButton1.setText("Edit");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -79,10 +91,6 @@ public class ContentCreationDialogue extends javax.swing.JDialog {
                 jButton3ActionPerformed(evt);
             }
         });
-
-        jComboBox1.setBackground(new java.awt.Color(0, 255, 0));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Post", "Story" }));
-        jComboBox1.setBorder(javax.swing.BorderFactory.createCompoundBorder(null, new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED)));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -105,14 +113,12 @@ public class ContentCreationDialogue extends javax.swing.JDialog {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
                 .addComponent(jButton3)
                 .addGap(38, 38, 38)
@@ -131,42 +137,27 @@ public class ContentCreationDialogue extends javax.swing.JDialog {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         String text=jTextArea1.getText();
         Content content = new Content(text,this.image);
-        String type = (String) jComboBox1.getSelectedItem();
 
 
-        if(type.compareTo("Post")==0){
             Post post = new Post(user.getUserId(),content);
-            JSONArray tempar = json.readProfiles().get(user.getUserId()).getContents();
+            post.setContentId(this.post.getContentId());
             try{
-            post.setContentId(Integer.toString(tempar.size()));
-            }catch(NullPointerException e){
-                post.setContentId("0");
-            }
-            post.createContent();
-            Message m = new Message(null, true,"Post posted successfully!");
+
+        }catch(IndexOutOfBoundsException e){
+            post.setContentId("0");
+        }
+        json json = new json();
+        json.put("Content ID",post.getContentId());
+        json.put("Author ID",post.getUserId());
+        json.put("timeStamp",post.getTimeStamp());
+        json.put("Content Text",post.getContent().getText());
+        json.put("Content Image",post.getContent().getImage());
+        json.submitGroupArray(Integer.toString(group.getId()),"Contents","Content ID",post.getContentId());
+        
+            Message m = new Message(null, true,"Post edited successfully!");
             m.setLocationRelativeTo(this);
             m.setVisible(true);
-        }
-        if(type.compareTo("Story")==0){
-            Story story = new Story(user.getUserId(),content);
-            JSONArray tempar = json.readProfiles().get(user.getUserId()).getContents();
-            
-            for(int i =0;i<999;i++){
-                try{
-                if(((String)((JSONObject)tempar.get(i)).get("Content ID")).compareTo(Integer.toString(i))==0){ //to create unique ids
-                    continue;
-                }
-                
-            }catch(IndexOutOfBoundsException e){
-            }
-                story.setContentId(Integer.toString(i));
-                break;
-            }
-            story.createContent();
-            Message m = new Message(null, true,"Story posted successfully!");
-            m.setLocationRelativeTo(this);
-            m.setVisible(true);
-        }
+            dispose();
     }                                        
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
@@ -239,7 +230,6 @@ public class ContentCreationDialogue extends javax.swing.JDialog {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     // End of variables declaration                   

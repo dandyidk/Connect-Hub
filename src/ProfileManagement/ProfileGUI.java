@@ -27,7 +27,7 @@ public class ProfileGUI extends JFrame implements FILELOCATION {
 
         setTitle("User Profile Management");
         setSize(1000, 700);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
         // Set layout for the frame
