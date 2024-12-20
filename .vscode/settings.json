@@ -1,7 +1,8 @@
 {
 
     "java.project.referencedLibraries": [
-        "src/ContentCreation/json-simple-1.1.jar"
+        "src/ContentCreation/json-simple-1.1.jar",
+        "c:\\Users\\mohamed\\Downloads\\json-20210307.jar"
     ],
     "java.project.sourcePaths": [
         "src"
