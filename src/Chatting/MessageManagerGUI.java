@@ -21,6 +21,12 @@ public class MessageManagerGUI extends JFrame {
     private String receiverId;
 
     private static final String DEFAULT_FILE_PATH = "C:\\Users\\mohamed\\OneDrive\\Desktop\\test\\Connect-Hub\\Chats.json";
+<<<<<<< Updated upstream
+=======
+    private static final String USERS_FILE_PATH = "C:\\Users\\mohamed\\OneDrive\\Desktop\\test\\Connect-Hub\\DATABASE\\users.json";
+
+    private Map<String, String> userMap;
+>>>>>>> Stashed changes
 
     public MessageManagerGUI(String senderId, String receiverId) {
         this.senderId = senderId;
