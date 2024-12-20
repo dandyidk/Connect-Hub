@@ -42,16 +42,7 @@ public class GroupBuilder  implements FILELOCATION{
         js.put("Group Name",name);
         js.put("Group Description",description);
         js.put("Group Photo",groupPhoto);
-        JSONObject jsarray = new JSONObject();
         JSONArray array= new JSONArray();
-        // for(int i = 0;i<userss.length;i++){
-        //     userss[i].setGroup(group);
-        //     JSONArray temp = new JSONArray();
-        //     jsarray.put("User Id",userss[i].getUserId());
-        //     jsarray.put("User Status","User");
-        //     array.add(jsarray);
-        // }
-        
         js.put("Group Users",array);
         js.put("Group Creator ID",creator.getUserId());
         js.put("Contents",new JSONArray());

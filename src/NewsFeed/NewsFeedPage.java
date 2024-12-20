@@ -5,9 +5,13 @@
 package NewsFeed;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.ImageIcon;
 
+import Commenting.CommentingPage;
+import Commenting.LikeBuilder;
+import Commenting.LikeFactory;
 import ContentCreation.Content;
 import ContentCreation.ContentCreationDialogue;
 import ContentCreation.ContentMedia;
@@ -95,6 +99,9 @@ public class NewsFeedPage extends javax.swing.JFrame implements FILELOCATION{
         FriendLIst = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        Like = new javax.swing.JButton();
+        LIkes = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -247,6 +254,24 @@ public class NewsFeedPage extends javax.swing.JFrame implements FILELOCATION{
             }
         });
 
+        jButton3.setBackground(new java.awt.Color(0, 0, 0));
+        jButton3.setForeground(new java.awt.Color(255, 255, 255));
+        jButton3.setText("Comment");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        Like.setBackground(new java.awt.Color(0, 0, 0));
+        Like.setForeground(new java.awt.Color(255, 255, 255));
+        Like.setText("Like");
+        Like.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LikeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -273,6 +298,12 @@ public class NewsFeedPage extends javax.swing.JFrame implements FILELOCATION{
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(Back, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(317, 317, 317)
+                                .addComponent(jButton3)
+                                .addGap(61, 61, 61)
+                                .addComponent(Like)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(LIkes)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(Next)
                                 .addGap(37, 37, 37))
@@ -332,7 +363,10 @@ public class NewsFeedPage extends javax.swing.JFrame implements FILELOCATION{
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(Back)
-                                    .addComponent(Next, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(Next, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton3)
+                                    .addComponent(Like)
+                                    .addComponent(LIkes))
                                 .addGap(52, 52, 52))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(11, 11, 11)
@@ -472,6 +506,23 @@ public class NewsFeedPage extends javax.swing.JFrame implements FILELOCATION{
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        try{
+        CommentingPage pg = new CommentingPage(this,true,json.readProfiles().get(user),this.contents.get(iterator));
+        pg.setLocationRelativeTo(this);
+        pg.setTitle("All comments");
+        pg.setVisible(true);
+        }catch(IndexOutOfBoundsException e){
+            
+        }
+        
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void LikeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LikeActionPerformed
+        LikeFactory liker  = new LikeFactory();
+        liker.buildLike(user, this.contents.get(iterator));
+    }//GEN-LAST:event_LikeActionPerformed
+
 
     private void showPost(ContentMedia content){
         ImageIcon img = new ImageIcon(content.getContent().getImage());
@@ -481,6 +532,9 @@ public class NewsFeedPage extends javax.swing.JFrame implements FILELOCATION{
         jLabel1.setText("Made by: "+json.readProfiles().get(content.getUserId()).getUsername()+" on"+content.getTimeStamp()+"\n"+content.getContent().getText());
         }catch(Exception e){
             jLabel1.setText("");
+        }
+        if(content.getUserId()!=null){
+        showLikes(content);
         }
     }
     private void showFriends(){
@@ -514,6 +568,16 @@ public class NewsFeedPage extends javax.swing.JFrame implements FILELOCATION{
             text = text + group.getName()+"\n\n";
         }
         GroupSuggesstions.setText(text);
+    }
+    private void showLikes(ContentMedia content){
+        int text = 0;
+        HashMap <String,Commenting.Like> likes = json.readLikess();
+        for(Commenting.Like like :likes.values()){
+            if((like.getContentId().compareTo(content.getContentId())==0)&&(like.getAuthorId().compareTo(content.getUserId())==0)){
+            text++;
+            }
+        }
+        LIkes.setText(Integer.toString(text));
     }
     /**
      * @param args the command line arguments
@@ -556,6 +620,8 @@ public class NewsFeedPage extends javax.swing.JFrame implements FILELOCATION{
     private javax.swing.JTextArea FriendSuggesstoins;
     private javax.swing.JTextArea GroupSuggesstions;
     private javax.swing.JLabel Image;
+    private javax.swing.JLabel LIkes;
+    private javax.swing.JButton Like;
     private javax.swing.JButton Logout;
     private javax.swing.JButton Next;
     private javax.swing.JButton Post;
@@ -565,6 +631,7 @@ public class NewsFeedPage extends javax.swing.JFrame implements FILELOCATION{
     private javax.swing.JButton ViewProfile;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;

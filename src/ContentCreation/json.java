@@ -12,6 +12,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
+import javax.print.DocFlavor.STRING;
+
 import GroupManagement.Admin;
 import GroupManagement.Group;
 import GroupManagement.GroupRequest;
@@ -20,6 +22,9 @@ import GroupManagement.PrimaryGroupAdmin;
 
 import org.json.simple.*;
 import org.json.simple.parser.*;
+
+import Commenting.Comment;
+import Commenting.Like;
 
 public class json implements FILELOCATION {
     private JSONObject js;
@@ -54,6 +59,8 @@ public class json implements FILELOCATION {
             JSONObject temp = new JSONObject();
             temp.put("Users", array);
             temp.put("Groups", array);
+            temp.put("Comments", array);
+            temp.put("Likes", array);
             br.write(temp.toString());
             br.close();
         } catch (IOException e) {
@@ -225,7 +232,11 @@ public class json implements FILELOCATION {
             
             JSONArray temparray = (JSONArray) obj.get("Groups"); // getting all users
             JSONArray temparray3 = (JSONArray) obj.get("Users"); // getting all users
+            JSONArray temparray5 = (JSONArray) obj.get("Likes"); // getting all users
+            JSONArray temparray6 = (JSONArray) obj.get("Comments"); // getting all users
             jsonObject.put("Users",temparray3);
+            jsonObject.put("Likes",temparray5);
+            jsonObject.put("Comments",temparray6);
             JSONArray tempor = new JSONArray();
             for (int i = 0; i < temparray.size(); i++) {
                 JSONObject temp = (JSONObject) temparray.get(i); // getting each group
@@ -300,6 +311,10 @@ public class json implements FILELOCATION {
         }
 
     }
+    
+    
+    
+
 
     public static HashMap<String, Profile> readProfiles() {
         File file = new File(DATABASE);
@@ -345,6 +360,7 @@ public class json implements FILELOCATION {
                         (String) temp.get("Username"), (String) temp.get("HashedPassword"),
                         (String) temp.get("Date of Birth"), (String) temp.get("Status"));
                 profile.setContents(contents);
+                profile.setContents(tempar1);
                 profile.setFriends(tempar2);
                 profile.setProfile(tempar4);
                 profile.setFriendRequests(tempar3);
@@ -454,6 +470,70 @@ public class json implements FILELOCATION {
 
     }
 
+   public static HashMap<String,Comment> readComments(){
+    File file = new File(DATABASE);
+    try {
+        FileReader fileReader = new FileReader(file); // check if file is there
+        fileReader.close();
+
+    } catch (FileNotFoundException e) {
+        return null;
+    } catch (IOException e) {
+        System.out.println("Error");
+    }
+
+    JSONParser parser = new JSONParser();
+    JSONObject jsonObject = new JSONObject();
+    HashMap<String, Comment> comments = new HashMap<String, Comment>();
+    try {
+        Object obj = parser.parse(new FileReader(DATABASE));
+        jsonObject = (JSONObject) obj;
+        JSONArray temparray = (JSONArray) jsonObject.get("Comments");
+
+        for (int j = 0; j < temparray.size(); j++) {
+            JSONObject temp = (JSONObject) temparray.get(j);
+           Comment comment = new Comment((String)temp.get("Text"),(String)temp.get("User Id"),(String)temp.get("Content ID"),(String)temp.get("Comment Id"),(String)temp.get("Author ID"));
+           comments.put(comment.getId(), comment);
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return comments;
+   }
+   
+   public static HashMap<String,Like> readLikess(){
+    File file = new File(DATABASE);
+    try {
+        FileReader fileReader = new FileReader(file); // check if file is there
+        fileReader.close();
+
+    } catch (FileNotFoundException e) {
+        return null;
+    } catch (IOException e) {
+        System.out.println("Error");
+    }
+
+    JSONParser parser = new JSONParser();
+    JSONObject jsonObject = new JSONObject();
+    HashMap<String, Like> likes = new HashMap<String, Like>();
+    try {
+        Object obj = parser.parse(new FileReader(DATABASE));
+        jsonObject = (JSONObject) obj;
+        JSONArray temparray = (JSONArray) jsonObject.get("Likes");
+
+        for (int j = 0; j < temparray.size(); j++) {
+            JSONObject temp = (JSONObject) temparray.get(j);
+           Like like = new Like((String)temp.get("User Id"),(String)temp.get("Content ID"),(String)temp.get("Like Id"),(String)temp.get("Author ID"));
+           likes.put(like.getId(), like);
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return likes;
+   }
+   
     @SuppressWarnings("unchecked")
     public static void deleteGroup(String groupId) { 
         File file = new File(DATABASE);
@@ -486,39 +566,5 @@ public class json implements FILELOCATION {
             e.printStackTrace();
         }
     }
-    // public static void deleteGroupObjectOfAnArray(String groupId,String ArrayKey,String KeyId,String objectId) {  
-    //     File file = new File(DATABASE);
- 
-
-    //     JSONParser parser = new JSONParser();
-    //     JSONObject jsonObject = new JSONObject();
-    //     try {
-    //         Object obj = parser.parse(new FileReader(DATABASE));
-    //         jsonObject = (JSONObject) obj;
-    //         FileWriter fr = new FileWriter(file, false);
-    //         BufferedWriter br = new BufferedWriter(fr);
-    //         JSONArray temparray = (JSONArray) jsonObject.get("Groups");
-    //         JSONArray temparray2 = (JSONArray) jsonObject.get("Users");
-
-    //         for (int i = 0; i < temparray.size(); i++) {
-    //             JSONObject object = (JSONObject) temparray.get(i); //each group
-    //             if (((String) object.get("Group Id")).compareTo(groupId) == 0) { //found the group
-    //                 JSONArray tempor = (JSONArray) object.get(ArrayKey);
-    //                 for(int j = 0;j<tempor.size();j++){
-    //                     if(((JSONObject)tempor.get(j)).get(KeyId))
-    //                 }
-    //                 temparray.remove(i);
-
-    //             }
-    //         }
-    //         jsonObject.put("Users",temparray2);
-    //         jsonObject.put("Groups", temparray);
-    //         br.write(jsonObject.toString());
-    //         br.close();
-    //         return;
-
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    // }
+   
 }

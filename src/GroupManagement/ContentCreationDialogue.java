@@ -135,11 +135,17 @@ public class ContentCreationDialogue extends javax.swing.JDialog {
 
             Post post = new Post(user.getUserId(),content);
             ContentMedia[] tempar = json.readGroups().get(Integer.toString(group.getId())).getContents();
+            int id = tempar.length;
+            try{
+            id = id+json.readProfiles().get(user.getUserId()).getContents2().length;
+            }catch(NullPointerException e){
+
+            }
             
 
         
 
-        post.setContentId(Integer.toString(tempar.length));
+        post.setContentId(Integer.toString(id));
         json json = new json();
         json.put("Content ID",post.getContentId());
         json.put("Author ID",post.getUserId());
