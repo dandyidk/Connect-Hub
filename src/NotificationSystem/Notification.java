@@ -4,15 +4,18 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import Commenting.Comment;
+import ContentCreation.ContentMedia;
+import ContentCreation.Profile;
 import ContentCreation.json;
 import FriendManagement.FriendRequests;
 import GroupManagement.Admin;
 import GroupManagement.Group;
 
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Notification {
 
@@ -32,59 +35,18 @@ public class Notification {
     }
 
     public static void getUserRequests(String filePath, int userId, StringBuilder friendRequestsDisplay) {
-        JSONObject jsonData = jsonObjReader(filePath);
+        Profile user = json.readProfiles().get(Integer.toString(userId));
+        JSONArray friendRequestsArray=user.getFriendsRequests();
 
-        if (jsonData == null) {
-            friendRequestsDisplay.append("Error: Unable to read user data.\n");
-            return;
-        }
-
-        JSONArray usersArray = (JSONArray) jsonData.get("Users");
-        if (usersArray == null || usersArray.isEmpty()) {
-            friendRequestsDisplay.append("No users found in the data.\n");
-            return;
-        }
-
-        // Find the current user by ID
-        JSONObject currentUser = null;
-        for (Object userObject : usersArray) {
-            JSONObject user = (JSONObject) userObject;
-            int id = Integer.parseInt((String) user.get("User Id"));
-            if (id == userId) {
-                currentUser = user;
-                break;
-            }
-            
-        }
-
-        if (currentUser == null) {
-            friendRequestsDisplay.append("User with ID ").append(userId).append(" not found.\n");
-            return;
-        }
-
-        // Fetch friend requests for the user
-        JSONArray friendRequestsArray = (JSONArray) currentUser.get("Friend Requests");
-        if (friendRequestsArray == null || friendRequestsArray.isEmpty()) {
-            friendRequestsDisplay.append("No friend requests found for you").append("\n");
-            return;
-        }
-
-        // Iterate over friend requests and fetch details
         for (Object requestObject : friendRequestsArray) {
             JSONObject request = (JSONObject) requestObject;
             String profileId = (String) request.get("Profile Id");
-
-            // Find the friend's details in the users array
             boolean friendFound = false;
-            for (Object userObject : usersArray) {
-                JSONObject potentialFriend = (JSONObject) userObject;
-                String potentialFriendId = (String) potentialFriend.get("User Id");
-                if (potentialFriendId.equals(profileId)&&((String)potentialFriend.get("Request Status")).compareTo("Pending")==0) {
-                    String friendName = (String) potentialFriend.get("Username");
-                    friendRequestsDisplay.append("Friend Request from: ").append(friendName).append("\n");
-                    friendFound = true;
-                    break;
-                }
+            if (((String)request.get("Request Status")).compareTo("Pending")==0) {
+                String friendName = json.readProfiles().get(profileId).getUsername();
+                friendRequestsDisplay.append("Friend Request from: ").append(friendName).append("\n");
+                friendFound = true;
+                break;
             }
 
             if (!friendFound) {
@@ -234,7 +196,25 @@ public class Notification {
     }
 
 
-       // Method to check group status change and notify
+       
+    public static void checkComments(String filePath, int userId, StringBuilder commentsDisplaye){
+        HashMap<String,Comment> comments = json.readComments();
+        String commentText="";
+        boolean flag = false;
+        for(Comment comment:comments.values()){
+            if(comment.getAuthorId().compareTo(json.readProfiles().get(Integer.toString(userId)).getUserId())==0){
+                flag = true;
+                commentText = commentText + comment.getText();
+            }
+        }
+        if(flag){
+            commentsDisplaye.append("New comments from your recent posts:"+commentText);
+        }
+        else{
+            commentsDisplaye.append("No new comments");
+        }
+    }
+        // Method to check group status change and notify
        public static void checkGroupStatusChange(String filePath, int userId, StringBuilder notificationsDisplay,ArrayList<Group> groupies) {
         JSONObject jsonData = jsonObjReader(filePath);
         if (jsonData == null) {
@@ -312,44 +292,27 @@ public class Notification {
                     }
                 }
             }
-            
-            // // Proceed with status change check only if the user is in the group
-            // String currentStatus = (String) group.get("Group Description");
-            // String previousStatus = (String) group.get("Previos Group Description");
-    
-            // // If there's a status change
-            // // If there's a status change
-            // if (previousStatus != null && !previousStatus.equals(currentStatus)) {
-            //     notificationsDisplay.append("Group '").append(groupName).append("' status changed from '")
-            //             .append(previousStatus).append("' to '").append(currentStatus).append("'.\n");
-            // }
-
-            // // Update previous status for future comparisons
 
         }
     
-        // Save the updated JSON data with new "Previous Status" fields
-        // try (FileWriter file = new FileWriter(filePath)) {
-        //     file.write(jsonData.toJSONString());
-        //     file.flush();
-        // } catch (IOException e) {
-        //     e.printStackTrace();
-        // }
+
     }
     
 
-    public static void refresh(String filePath, int userId, StringBuilder friendRequestsDisplay, StringBuilder groupUsersDisplay, StringBuilder notificationsDisplay,StringBuilder statusNotificationDisplay,ArrayList<Group> groupies) {
+    public static synchronized void refresh(String filePath, int userId, StringBuilder friendRequestsDisplay, StringBuilder groupUsersDisplay, StringBuilder notificationsDisplay,StringBuilder statusNotificationDisplay,ArrayList<Group> groupies,StringBuilder commentsDisplay) {
         // Clear previous displays
         friendRequestsDisplay.setLength(0);
         groupUsersDisplay.setLength(0);
         notificationsDisplay.setLength(0);
         statusNotificationDisplay.setLength(0);
+        commentsDisplay.setLength(0);
 
         // Fetch updated data
         getUserRequests(filePath, userId, friendRequestsDisplay);
         getGroupUsers(filePath, userId, groupUsersDisplay);
         getGroupPostNotifications(filePath, userId, notificationsDisplay);
         checkGroupStatusChange(filePath,userId, statusNotificationDisplay,groupies);
+        checkComments(filePath, userId, commentsDisplay);
         }
 
          // Method to accept a friend request

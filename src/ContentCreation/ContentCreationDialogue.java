@@ -136,12 +136,19 @@ public class ContentCreationDialogue extends javax.swing.JDialog {
 
         if(type.compareTo("Post")==0){
             Post post = new Post(user.getUserId(),content);
-            JSONArray tempar = json.readProfiles().get(user.getUserId()).getContents();
+            JSONArray tempar =user.getContents();
+            int id = 0;
             try{
-            post.setContentId(Integer.toString(tempar.size()));
-            }catch(NullPointerException e){
-                post.setContentId("0");
+            id= tempar.size();
+        }catch(NullPointerException e){}
+        try{
+            for(int i =0;i<user.getGroups().size();i++){
+               id =id+user.getGroups().get(i).getContents().length;
             }
+        }catch(NullPointerException e){}
+
+            post.setContentId(Integer.toString(id));
+            
             post.createContent();
             Message m = new Message(null, true,"Post posted successfully!");
             m.setLocationRelativeTo(this);

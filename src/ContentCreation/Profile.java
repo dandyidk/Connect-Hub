@@ -12,6 +12,7 @@ import java.util.HashMap;
 
 import org.json.simple.JSONArray;
 
+import Commenting.CommentBuilder;
 import FriendManagement.FriendRequests;
 import GroupManagement.Admin;
 import GroupManagement.Group;
@@ -164,6 +165,10 @@ public class Profile {
     public void constructGroup(String name,String description,String groupPhoto,Profile[] users){
         this.gp = new GroupBuilder(this);
         this.gp.buildGroup(name,description, groupPhoto);
+    }
+    public void constructComment(String text,String id,ContentMedia post){
+        CommentBuilder cb = new CommentBuilder(text,id,post);
+        cb.buildComment();
     }
 }
 
