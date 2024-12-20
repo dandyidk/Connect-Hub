@@ -1,4 +1,4 @@
-package Chatting;
+package chatting.mycompany.chatting;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MessageManagerGUI extends JFrame {
 
@@ -20,12 +22,39 @@ public class MessageManagerGUI extends JFrame {
     private String senderId;
     private String receiverId;
 
-    private static final String DEFAULT_FILE_PATH = "C:\\Users\\mohamed\\OneDrive\\Desktop\\test\\Connect-Hub\\Chats.json";
+    private static final String DEFAULT_FILE_PATH = "C:\\Users\\mohamed\\OneDrive\\Desktop\\Chatting\\Chats.json";
+    private static final String USERS_FILE_PATH = "C:\\Users\\mohamed\\OneDrive\\Desktop\\test\\Connect-Hub\\users.json";
+
+    private Map<String, String> userMap;
 
     public MessageManagerGUI(String senderId, String receiverId) {
         this.senderId = senderId;
         this.receiverId = receiverId;
+        loadUserData();
         initUI();
+    }
+
+    // Load user data from Users.json
+    private void loadUserData() {
+        userMap = new HashMap<>();
+        try {
+            String content = new String(Files.readAllBytes(Paths.get(USERS_FILE_PATH)));
+            JSONObject userData = new JSONObject(content);
+            JSONArray users = userData.getJSONArray("Users");
+
+            for (int i = 0; i < users.length(); i++) {
+                JSONObject user = users.getJSONObject(i);
+                String userId = user.getString("User Id");
+                String username = user.getString("Username");
+                userMap.put(userId, username);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "Error loading user data: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void initUI() {
@@ -80,9 +109,11 @@ public class MessageManagerGUI extends JFrame {
                         JSONArray messages = chat.getJSONArray("messages");
                         for (int j = 0; j < messages.length(); j++) {
                             JSONObject message = messages.getJSONObject(j);
+                            String sender = users.getString(0).equals(message.getString("senderId")) ? users.getString(0) : users.getString(1);
+                            String senderName = userMap.get(sender);
                             messagesBuilder.append(message.getString("timestamp"))
                                     .append(" - ")
-                                    .append(message.getString("senderId"))
+                                    .append(senderName)
                                     .append(": ")
                                     .append(message.getString("messageText"))
                                     .append("\n");
@@ -122,13 +153,15 @@ public class MessageManagerGUI extends JFrame {
                 Message message = new Message(senderId, receiverId, messageText);
                 messageSender.sendMessage(message);
 
+                // Append message in chat view with sender's name
+                String senderName = userMap.get(senderId);
                 JOptionPane.showMessageDialog(MessageManagerGUI.this,
                         "Message sent successfully!",
                         "Success",
                         JOptionPane.INFORMATION_MESSAGE);
 
                 newMessageField.setText("");
-                messagesArea.append("You: " + messageText + "\n");
+                messagesArea.append(senderName + ": " + messageText + "\n");
 
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -142,7 +175,7 @@ public class MessageManagerGUI extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            // first number is the sender and the second is the receiver
+            // Example: Sender ID = "2", Receiver ID = "1"
             MessageManagerGUI gui = new MessageManagerGUI("2", "1");
             gui.setVisible(true);
         });
