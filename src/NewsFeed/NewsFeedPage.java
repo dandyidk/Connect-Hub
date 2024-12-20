@@ -518,12 +518,21 @@ public class NewsFeedPage extends javax.swing.JFrame implements FILELOCATION{
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void LikeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LikeActionPerformed
+        
         LikeFactory liker  = new LikeFactory();
-        liker.buildLike(user, this.contents.get(iterator));
+        if(liker.buildLike(user, this.contents.get(iterator))){
+            Like.setBackground(new java.awt.Color(0, 0, 255));
+            showLikes(this.contents.get(this.iterator));
+        }
+        else{
+            Like.setBackground(new java.awt.Color(0, 0, 0));
+        showLikes(this.contents.get(this.iterator));
+        }
     }//GEN-LAST:event_LikeActionPerformed
 
 
     private void showPost(ContentMedia content){
+        Like.setBackground(new java.awt.Color(0, 0, 0));
         ImageIcon img = new ImageIcon(content.getContent().getImage());
                                                                                                                                                                                     
         Image.setIcon(img);
@@ -574,6 +583,9 @@ public class NewsFeedPage extends javax.swing.JFrame implements FILELOCATION{
         for(Commenting.Like like :likes.values()){
             if((like.getContentId().compareTo(content.getContentId())==0)&&(like.getAuthorId().compareTo(content.getUserId())==0)){
             text++;
+            if(like.getUserId().compareTo(user)==0){
+                Like.setBackground(new java.awt.Color(0, 0, 255));
+            }
             }
         }
         LIkes.setText(Integer.toString(text));
