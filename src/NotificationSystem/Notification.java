@@ -4,6 +4,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import Commenting.Comment;
+import ContentCreation.ContentMedia;
 import ContentCreation.Profile;
 import ContentCreation.json;
 import FriendManagement.FriendRequests;
@@ -13,6 +15,7 @@ import GroupManagement.Group;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Notification {
 
@@ -193,7 +196,25 @@ public class Notification {
     }
 
 
-       // Method to check group status change and notify
+       
+    public static void checkComments(String filePath, int userId, StringBuilder commentsDisplaye){
+        HashMap<String,Comment> comments = json.readComments();
+        String commentText="";
+        boolean flag = false;
+        for(Comment comment:comments.values()){
+            if(comment.getAuthorId().compareTo(json.readProfiles().get(Integer.toString(userId)).getUserId())==0){
+                flag = true;
+                commentText = commentText + comment.getText();
+            }
+        }
+        if(flag){
+            commentsDisplaye.append("New comments from your recent posts:"+commentText);
+        }
+        else{
+            commentsDisplaye.append("No new comments");
+        }
+    }
+        // Method to check group status change and notify
        public static void checkGroupStatusChange(String filePath, int userId, StringBuilder notificationsDisplay,ArrayList<Group> groupies) {
         JSONObject jsonData = jsonObjReader(filePath);
         if (jsonData == null) {
@@ -271,44 +292,27 @@ public class Notification {
                     }
                 }
             }
-            
-            // // Proceed with status change check only if the user is in the group
-            // String currentStatus = (String) group.get("Group Description");
-            // String previousStatus = (String) group.get("Previos Group Description");
-    
-            // // If there's a status change
-            // // If there's a status change
-            // if (previousStatus != null && !previousStatus.equals(currentStatus)) {
-            //     notificationsDisplay.append("Group '").append(groupName).append("' status changed from '")
-            //             .append(previousStatus).append("' to '").append(currentStatus).append("'.\n");
-            // }
-
-            // // Update previous status for future comparisons
 
         }
     
-        // Save the updated JSON data with new "Previous Status" fields
-        // try (FileWriter file = new FileWriter(filePath)) {
-        //     file.write(jsonData.toJSONString());
-        //     file.flush();
-        // } catch (IOException e) {
-        //     e.printStackTrace();
-        // }
+
     }
     
 
-    public static void refresh(String filePath, int userId, StringBuilder friendRequestsDisplay, StringBuilder groupUsersDisplay, StringBuilder notificationsDisplay,StringBuilder statusNotificationDisplay,ArrayList<Group> groupies) {
+    public static synchronized void refresh(String filePath, int userId, StringBuilder friendRequestsDisplay, StringBuilder groupUsersDisplay, StringBuilder notificationsDisplay,StringBuilder statusNotificationDisplay,ArrayList<Group> groupies,StringBuilder commentsDisplay) {
         // Clear previous displays
         friendRequestsDisplay.setLength(0);
         groupUsersDisplay.setLength(0);
         notificationsDisplay.setLength(0);
         statusNotificationDisplay.setLength(0);
+        commentsDisplay.setLength(0);
 
         // Fetch updated data
         getUserRequests(filePath, userId, friendRequestsDisplay);
         getGroupUsers(filePath, userId, groupUsersDisplay);
         getGroupPostNotifications(filePath, userId, notificationsDisplay);
         checkGroupStatusChange(filePath,userId, statusNotificationDisplay,groupies);
+        checkComments(filePath, userId, commentsDisplay);
         }
 
          // Method to accept a friend request

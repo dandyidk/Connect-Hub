@@ -12,9 +12,10 @@ import org.json.simple.parser.JSONParser;
 import ContentCreation.ContentMedia;
 import ContentCreation.FILELOCATION;
 import ContentCreation.json;
+import NotificationSystem.Observer;
 
 
-public class CommentBuilder implements FILELOCATION {
+public class CommentBuilder implements FILELOCATION,Observer {
     private String text;
     private String id;
     private ContentMedia post;
@@ -23,13 +24,17 @@ public class CommentBuilder implements FILELOCATION {
         this.id = id;
         this.post = post;
     }
+    @Override
+    public void update(){
+
+    }
     @SuppressWarnings("unchecked")
     public void buildComment(){
         JSONObject js= new JSONObject();
         js.put("User Id",id );
         js.put("Text",text);
         js.put("Content ID",post.getContentId());
-        js.put("Author ID",post.getContentId());
+        js.put("Author ID",post.getUserId());
         String ids = Integer.toString(json.readComments().size());
         js.put("Comment Id",ids);
 
