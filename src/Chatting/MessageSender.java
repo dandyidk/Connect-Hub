@@ -1,4 +1,4 @@
-package Chatting;
+package chatting.mycompany.chatting;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -10,7 +10,7 @@ import java.nio.file.Files;
 
 public class MessageSender {
 
-    static String FILE_PATH = "C:\\Users\\mohamed\\OneDrive\\Desktop\\test\\Connect-Hub\\Chats.json";   // Path to your chat data JSON file
+    static String FILE_PATH = "C:\\Users\\mohamed\\OneDrive\\Desktop\\Chatting\\Chats.json";   // Path to your chat data JSON file
 
     // Method to send a message (takes a Message object as input)
     public void sendMessage(Message message) {

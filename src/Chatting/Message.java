@@ -1,4 +1,5 @@
-package Chatting;
+
+package chatting.mycompany.chatting;
 
 import java.util.Date;
 
