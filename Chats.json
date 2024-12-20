@@ -1,0 +1,38 @@
+{"chats": [{
+    "messages": [
+        {
+            "messageText": "Hello, how are you?",
+            "senderId": "1",
+            "receiverId": "2",
+            "timestamp": "Fri Dec 20 04:59:17 EET 2024"
+        },
+        {
+            "messageText": "good",
+            "senderId": "2",
+            "receiverId": "1",
+            "timestamp": "Fri Dec 20 05:03:38 EET 2024"
+        },
+        {
+            "messageText": "weemofewopmf",
+            "senderId": "1",
+            "receiverId": "2",
+            "timestamp": "Fri Dec 20 06:23:03 EET 2024"
+        },
+        {
+            "messageText": "hi i am good",
+            "senderId": "1",
+            "receiverId": "2",
+            "timestamp": "Fri Dec 20 06:25:36 EET 2024"
+        },
+        {
+            "messageText": "wergrtgrt",
+            "senderId": "2",
+            "receiverId": "1",
+            "timestamp": "Fri Dec 20 06:29:32 EET 2024"
+        }
+    ],
+    "users": [
+        "1",
+        "2"
+    ]
+}]}
