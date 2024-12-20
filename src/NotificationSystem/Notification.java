@@ -4,13 +4,13 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import ContentCreation.Profile;
 import ContentCreation.json;
 import FriendManagement.FriendRequests;
 import GroupManagement.Admin;
 import GroupManagement.Group;
 
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -32,59 +32,18 @@ public class Notification {
     }
 
     public static void getUserRequests(String filePath, int userId, StringBuilder friendRequestsDisplay) {
-        JSONObject jsonData = jsonObjReader(filePath);
+        Profile user = json.readProfiles().get(Integer.toString(userId));
+        JSONArray friendRequestsArray=user.getFriendsRequests();
 
-        if (jsonData == null) {
-            friendRequestsDisplay.append("Error: Unable to read user data.\n");
-            return;
-        }
-
-        JSONArray usersArray = (JSONArray) jsonData.get("Users");
-        if (usersArray == null || usersArray.isEmpty()) {
-            friendRequestsDisplay.append("No users found in the data.\n");
-            return;
-        }
-
-        // Find the current user by ID
-        JSONObject currentUser = null;
-        for (Object userObject : usersArray) {
-            JSONObject user = (JSONObject) userObject;
-            int id = Integer.parseInt((String) user.get("User Id"));
-            if (id == userId) {
-                currentUser = user;
-                break;
-            }
-            
-        }
-
-        if (currentUser == null) {
-            friendRequestsDisplay.append("User with ID ").append(userId).append(" not found.\n");
-            return;
-        }
-
-        // Fetch friend requests for the user
-        JSONArray friendRequestsArray = (JSONArray) currentUser.get("Friend Requests");
-        if (friendRequestsArray == null || friendRequestsArray.isEmpty()) {
-            friendRequestsDisplay.append("No friend requests found for you").append("\n");
-            return;
-        }
-
-        // Iterate over friend requests and fetch details
         for (Object requestObject : friendRequestsArray) {
             JSONObject request = (JSONObject) requestObject;
             String profileId = (String) request.get("Profile Id");
-
-            // Find the friend's details in the users array
             boolean friendFound = false;
-            for (Object userObject : usersArray) {
-                JSONObject potentialFriend = (JSONObject) userObject;
-                String potentialFriendId = (String) potentialFriend.get("User Id");
-                if (potentialFriendId.equals(profileId)&&((String)potentialFriend.get("Request Status")).compareTo("Pending")==0) {
-                    String friendName = (String) potentialFriend.get("Username");
-                    friendRequestsDisplay.append("Friend Request from: ").append(friendName).append("\n");
-                    friendFound = true;
-                    break;
-                }
+            if (((String)request.get("Request Status")).compareTo("Pending")==0) {
+                String friendName = json.readProfiles().get(profileId).getUsername();
+                friendRequestsDisplay.append("Friend Request from: ").append(friendName).append("\n");
+                friendFound = true;
+                break;
             }
 
             if (!friendFound) {

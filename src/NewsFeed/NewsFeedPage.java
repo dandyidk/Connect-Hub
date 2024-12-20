@@ -10,7 +10,6 @@ import java.util.HashMap;
 import javax.swing.ImageIcon;
 
 import Commenting.CommentingPage;
-import Commenting.LikeBuilder;
 import Commenting.LikeFactory;
 import ContentCreation.Content;
 import ContentCreation.ContentCreationDialogue;
