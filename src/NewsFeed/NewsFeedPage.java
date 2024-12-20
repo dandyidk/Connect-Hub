@@ -8,13 +8,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
+
+import Chatting.MessageManagerGUI;
 import Commenting.CommentingPage;
 import Commenting.LikeFactory;
 import ContentCreation.Content;
 import ContentCreation.ContentCreationDialogue;
 import ContentCreation.ContentMedia;
 import ContentCreation.FILELOCATION;
+import ContentCreation.Message;
 import ContentCreation.Profile;
 import ContentCreation.json;
 import FriendManagement.Friend;
@@ -101,6 +105,7 @@ public class NewsFeedPage extends javax.swing.JFrame implements FILELOCATION{
         jButton3 = new javax.swing.JButton();
         Like = new javax.swing.JButton();
         LIkes = new javax.swing.JLabel();
+        Chat = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -271,6 +276,14 @@ public class NewsFeedPage extends javax.swing.JFrame implements FILELOCATION{
             }
         });
 
+        Chat.setBackground(new java.awt.Color(102, 51, 255));
+        Chat.setText("Chat");
+        Chat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ChatActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -292,7 +305,10 @@ public class NewsFeedPage extends javax.swing.JFrame implements FILELOCATION{
                                             .addGap(17, 17, 17)
                                             .addComponent(Post2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGap(10, 10, 10)))
-                                    .addComponent(jButton2))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jButton2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(Chat)))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -369,7 +385,9 @@ public class NewsFeedPage extends javax.swing.JFrame implements FILELOCATION{
                                 .addGap(52, 52, 52))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(11, 11, 11)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(Chat))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -530,6 +548,20 @@ public class NewsFeedPage extends javax.swing.JFrame implements FILELOCATION{
         }
     }//GEN-LAST:event_LikeActionPerformed
 
+    private void ChatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChatActionPerformed
+        String Reciever = JOptionPane.showInputDialog("enter the username");
+        for(Profile profile:json.readProfiles().values()){
+            if(profile.getUsername().equals(Reciever)){
+                MessageManagerGUI msg = new MessageManagerGUI(user,profile.getUserId());
+                msg.setLocationRelativeTo(this);
+                msg.setVisible(true);
+                break;
+            }
+        }
+        Message m = new Message(null,true,"There is no user with that name");
+       
+    }//GEN-LAST:event_ChatActionPerformed
+
 
     private void showPost(ContentMedia content){
         Like.setBackground(new java.awt.Color(0, 0, 0));
@@ -627,6 +659,7 @@ public class NewsFeedPage extends javax.swing.JFrame implements FILELOCATION{
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Back;
+    private javax.swing.JButton Chat;
     private javax.swing.JTextArea FriendLIst;
     private javax.swing.JTextArea FriendSuggesstoins;
     private javax.swing.JTextArea GroupSuggesstions;

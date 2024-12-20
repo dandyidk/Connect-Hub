@@ -1,7 +1,9 @@
-package chatting.mycompany.chatting;
+package Chatting;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import ContentCreation.FILELOCATION;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +14,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MessageManagerGUI extends JFrame {
+public class MessageManagerGUI extends JFrame implements FILELOCATION {
 
     private JTextArea messagesArea;
     private JTextArea newMessageField;
@@ -22,8 +24,8 @@ public class MessageManagerGUI extends JFrame {
     private String senderId;
     private String receiverId;
 
-    private static final String DEFAULT_FILE_PATH = "C:\\Users\\mohamed\\OneDrive\\Desktop\\Chatting\\Chats.json";
-    private static final String USERS_FILE_PATH = "C:\\Users\\mohamed\\OneDrive\\Desktop\\test\\Connect-Hub\\users.json";
+    private static final String DEFAULT_FILE_PATH = CHATS;
+    private static final String USERS_FILE_PATH = DATABASE;
 
     private Map<String, String> userMap;
 
@@ -61,7 +63,7 @@ public class MessageManagerGUI extends JFrame {
         // Frame properties
         setTitle("Message Manager");
         setSize(600, 400);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 

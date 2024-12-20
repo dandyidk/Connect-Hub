@@ -26,6 +26,7 @@ public class NotificationGUI extends JFrame {
         StringBuilder notificationsDisplay = new StringBuilder();
         StringBuilder statusNotificationDisplay = new StringBuilder();
         StringBuilder CommentsDisplay = new StringBuilder();
+        StringBuilder chatsDisplay = new StringBuilder();
 
 
         
@@ -71,7 +72,7 @@ public class NotificationGUI extends JFrame {
 
         JButton refreshButton = new JButton("Refresh");
         refreshButton.addActionListener(e -> {
-            Notification.refresh(filePath, userId, friendRequestsDisplay, groupUsersDisplay, notificationsDisplay, statusNotificationDisplay,groupies,CommentsDisplay);
+            Notification.refresh(filePath, userId, friendRequestsDisplay, groupUsersDisplay, notificationsDisplay, statusNotificationDisplay,groupies,CommentsDisplay,chatsDisplay);
 
             friendRequestPanel.removeAll();
             for (String friendRequest : friendRequestsDisplay.toString().split("\n")) {
@@ -122,7 +123,7 @@ friendRequestPanel.add(requestPanel);
     friendRequestPanel.repaint();
 
     groupUsersArea.setText(groupUsersDisplay.toString());
-    groupPostsArea.setText(notificationsDisplay.toString()+"\n"+CommentsDisplay.toString());
+    groupPostsArea.setText(notificationsDisplay.toString()+"\n"+CommentsDisplay.toString()+"\n"+chatsDisplay);
     statusNotificationsArea.setText(statusNotificationDisplay.toString());
     });
 

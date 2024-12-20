@@ -1,0 +1,26 @@
+{"chats": [{
+    "messages": [
+        {
+            "messageText": "hello",
+            "senderId": "0",
+            "receiverId": "1",
+            "timestamp": "Fri Dec 20 15:54:03 EET 2024"
+        },
+        {
+            "messageText": "helllllllllllllllllooooooo",
+            "senderId": "0",
+            "receiverId": "1",
+            "timestamp": "Fri Dec 20 16:53:55 EET 2024"
+        },
+        {
+            "messageText": "sdaddasd",
+            "senderId": "0",
+            "receiverId": "1",
+            "timestamp": "Fri Dec 20 21:30:53 EET 2024"
+        }
+    ],
+    "users": [
+        "0",
+        "1"
+    ]
+}]}

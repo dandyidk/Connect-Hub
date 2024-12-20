@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -315,7 +316,7 @@ public class json implements FILELOCATION {
     
     
 
-
+    
     public static HashMap<String, Profile> readProfiles() {
         File file = new File(DATABASE);
         try {
@@ -500,6 +501,68 @@ public class json implements FILELOCATION {
         e.printStackTrace();
     }
     return comments;
+   }
+   
+   @SuppressWarnings("unchecked")
+public static void sendMessage(Chatting.Message message){
+        try {
+            File file = new File(CHATS);
+            org.json.JSONObject chatData;
+
+
+            if (file.exists()) {
+                String content = new String(Files.readAllBytes(file.toPath()));
+                chatData = new org.json.JSONObject(content);
+            } else {
+                chatData = new org.json.JSONObject();
+                chatData.put("chats", new org.json.JSONArray());
+            }
+
+
+            org.json.JSONArray chats = chatData.getJSONArray("chats");
+            boolean chatExists = false;
+
+            for (int i = 0; i < chats.length(); i++) {
+                org.json.JSONObject chat = chats.getJSONObject(i);
+                org.json.JSONArray users = chat.getJSONArray("users");
+
+                if ((users.getString(0).equals(message.getSenderId())) && users.getString(1).equals(message.getReceiverId()) || (users.getString(0).equals(message.getReceiverId()) && users.getString(1).equals(message.getSenderId()))) {
+                    org.json.JSONObject messageJson = new org.json.JSONObject();
+                    messageJson.put("senderId", message.getSenderId());
+                    messageJson.put("receiverId", message.getReceiverId());
+                    messageJson.put("timestamp", message.getTimestamp());
+                    messageJson.put("messageText", message.getMessageText());
+                    chat.getJSONArray("messages").put(messageJson);
+                    chatExists = true;
+                    break;
+                }
+            }
+
+            if (!chatExists) {
+                org.json.JSONObject newChat = new org.json.JSONObject();
+                newChat.put("users", new org.json.JSONArray().put(message.getSenderId()).put(message.getReceiverId()));
+                org.json.JSONArray newMessages = new org.json.JSONArray();
+                org.json.JSONObject messageJson = new org.json.JSONObject();
+                messageJson.put("senderId", message.getSenderId());
+                    messageJson.put("receiverId", message.getReceiverId());
+                    messageJson.put("timestamp", message.getTimestamp());
+                    messageJson.put("messageText", message.getMessageText());
+
+                newMessages.put(messageJson);
+                newChat.put("messages", newMessages);
+                chats.put(newChat);
+            }
+
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write(chatData.toString(4)); 
+            }
+            
+            System.out.println("Message sent successfully from " + message.getSenderId() + " to " + message.getReceiverId());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error sending message.");
+        }
    }
    
    public static HashMap<String,Like> readLikess(){

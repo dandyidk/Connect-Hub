@@ -1,8 +1,8 @@
 {
 
     "java.project.referencedLibraries": [
-        "src/ContentCreation/json-simple-1.1.jar",
-        "c:\\Users\\mohamed\\Downloads\\json-20210307.jar"
+        "src/ContentCreation/json-20210307.jar",
+        "/home/dandy/Desktop/Connect hub/Connect-Hub/src/ContentCreation/json-simple-1.1.jar"
     ],
     "java.project.sourcePaths": [
         "src"

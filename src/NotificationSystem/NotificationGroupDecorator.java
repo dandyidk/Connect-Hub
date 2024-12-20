@@ -1,31 +1,30 @@
 package NotificationSystem;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import Commenting.Comment;
-import ContentCreation.ContentMedia;
 import ContentCreation.FILELOCATION;
-import ContentCreation.Profile;
 import ContentCreation.json;
-import FriendManagement.FriendRequests;
 import GroupManagement.Admin;
 import GroupManagement.Group;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-public class Notification implements FILELOCATION,NotificationInterface {
-    private Notification() {
-        // Private constructor to prevent instantiation
+public class NotificationGroupDecorator  extends NotificationDecorator implements FILELOCATION{
+    private StringBuilder groupUsersDisplay;
+    private StringBuilder notificationsDisplay;
+    private int userId;
+    private ArrayList<Group> groupies;
+    public NotificationGroupDecorator(StringBuilder groupDisplay,int userId,NotificationInterface decoratedNotification){
+        super(decoratedNotification);
+        this.groupUsersDisplay = groupDisplay;
+        this.userId = userId;
     }
-    @Override
-    public String display() {
-       return null;
-    }
+    
     public static JSONObject jsonObjReader(String filePath) {
         JSONParser parser = new JSONParser();
         JSONObject jsonData = null;
@@ -36,31 +35,8 @@ public class Notification implements FILELOCATION,NotificationInterface {
         }
         return jsonData;
     }
-
-    public static void getUserRequests(String filePath, int userId, StringBuilder friendRequestsDisplay) {
-        Profile user = json.readProfiles().get(Integer.toString(userId));
-        JSONArray friendRequestsArray=user.getFriendsRequests();
-
-        for (Object requestObject : friendRequestsArray) {
-            JSONObject request = (JSONObject) requestObject;
-            String profileId = (String) request.get("Profile Id");
-            boolean friendFound = false;
-            if (((String)request.get("Request Status")).compareTo("Pending")==0) {
-                String friendName = json.readProfiles().get(profileId).getUsername();
-                friendRequestsDisplay.append("Friend Request from: ").append(friendName).append("\n");
-                friendFound = true;
-                break;
-            }
-
-            if (!friendFound) {
-                friendRequestsDisplay.append("No friend requests found for you").append("\n");
-            }
-        }
-    }
-
-
-    public static void getGroupUsers(String filePath, int userId, StringBuilder groupUsersDisplay) {
-        JSONObject jsonData = jsonObjReader(filePath);
+    public void getGroupUsers() {
+        JSONObject jsonData = jsonObjReader(DATABASE);
         if (jsonData == null) {
             groupUsersDisplay.append("Error: Unable to read data.\n");
             return;
@@ -122,10 +98,8 @@ public class Notification implements FILELOCATION,NotificationInterface {
             }
         }
     }
-
-
-    public static void getGroupPostNotifications(String filePath, int userId, StringBuilder notificationsDisplay) {
-        JSONObject jsonData = jsonObjReader(filePath);
+    public void getGroupPostNotifications() {
+        JSONObject jsonData = jsonObjReader(DATABASE);
         if (jsonData == null) {
             notificationsDisplay.append("Error: Unable to read data.\n");
             return;
@@ -197,53 +171,8 @@ public class Notification implements FILELOCATION,NotificationInterface {
             }
         }
     }
-
-
-       
-    public static void checkComments(String filePath, int userId, StringBuilder commentsDisplaye){
-        HashMap<String,Comment> comments = json.readComments();
-        String commentText="";
-        boolean flag = false;
-        for(Comment comment:comments.values()){
-            if(comment.getAuthorId().compareTo(json.readProfiles().get(Integer.toString(userId)).getUserId())==0){
-                flag = true;
-                commentText = commentText +"\n"+ comment.getText();
-            }
-        }
-        if(flag){
-            commentsDisplaye.append("New comments from your recent posts:"+commentText);
-        }
-        else{
-            commentsDisplaye.append("No new comments");
-        }
-    }
-    public static void checkChats(String filePath, int userId, StringBuilder chatsDisplaye){
-        JSONObject jsonObject = jsonObjReader(CHATS);
-
-        JSONArray chats = (JSONArray) jsonObject.get("chats");
-
-        for (Object chatObj : chats) {
-            JSONObject chat = (JSONObject) chatObj;
-
-            JSONArray messages = (JSONArray) chat.get("messages");
-
-            for (Object messageObj : messages) {
-                JSONObject message = (JSONObject) messageObj;
-
-                String receiverId = (String) message.get("receiverId");
-                String senderId = (String) message.get("senderId");
-                if (receiverId.equals(Integer.toString(userId))) {
-                    String messageText = (String) message.get("messageText");
-                    chatsDisplaye.append("Message from "+json.readProfiles().get(senderId).getUsername()+" :"+messageText);
-
-                }
-            }
-        }
-            
-    }
-        // Method to check group status change and notify
-       public static void checkGroupStatusChange(String filePath, int userId, StringBuilder notificationsDisplay,ArrayList<Group> groupies) {
-        JSONObject jsonData = jsonObjReader(filePath);
+     public void checkGroupStatusChange() {
+        JSONObject jsonData = jsonObjReader(DATABASE);
         if (jsonData == null) {
             notificationsDisplay.append("Error: Unable to read data.\n");
             return;
@@ -324,80 +253,8 @@ public class Notification implements FILELOCATION,NotificationInterface {
     
 
     }
-    
-    
-    public static synchronized void refresh(String filePath, int userId, StringBuilder friendRequestsDisplay, StringBuilder groupUsersDisplay, StringBuilder notificationsDisplay,StringBuilder statusNotificationDisplay,ArrayList<Group> groupies,StringBuilder commentsDisplay,StringBuilder chatsDisplay) {
-        // Clear previous displays
-        friendRequestsDisplay.setLength(0);
-        groupUsersDisplay.setLength(0);
-        notificationsDisplay.setLength(0);
-        statusNotificationDisplay.setLength(0);
-        commentsDisplay.setLength(0);
-        chatsDisplay.setLength(0);
-
-        // Fetch updated data
-        getUserRequests(filePath, userId, friendRequestsDisplay);
-        getGroupUsers(filePath, userId, groupUsersDisplay);
-        getGroupPostNotifications(filePath, userId, notificationsDisplay);
-        checkGroupStatusChange(filePath,userId, statusNotificationDisplay,groupies);
-        checkComments(filePath, userId, commentsDisplay);
-        checkChats(filePath, userId, chatsDisplay);
-        }
-
-         // Method to accept a friend request
-    public static void acceptFriendRequest(String filePath, int userId, String profileId) {
-        FriendRequests friendRequests =new FriendRequests("Pending", profileId, Integer.toString(userId));
-        friendRequests.acceptFriendRequestStatus();
+    @Override
+    public String display(){
+        return super.display() + groupUsersDisplay.toString() + notificationsDisplay.toString();
     }
-
-    // Method to delete a friend request
-    public static void deleteFriendRequest(String filePath, int userId, String profileId) {
-        FriendRequests friendRequests =new FriendRequests("Pending", profileId, Integer.toString(userId));
-        friendRequests.removeFriendRequestStatus();
-    }
-    // Method to get user ID from username
-    public static String getUserIdFromUsername(String filePath, String username) {
-        JSONObject jsonData = jsonObjReader(filePath);
-
-        if (jsonData == null) {
-            System.out.println("Error: Unable to read user data.");
-            return null;
-        }
-
-        JSONArray usersArray = (JSONArray) jsonData.get("Users");
-        if (usersArray == null || usersArray.isEmpty()) {
-            System.out.println("No users found in the data.");
-            return null;
-        }
-
-        // Iterate through the users array to find the user by username
-        for (Object userObject : usersArray) {
-            JSONObject user = (JSONObject) userObject;
-            String userUsername = (String) user.get("Username");
-
-            if (username.equalsIgnoreCase(userUsername)) {
-                return (String) user.get("User Id");
-            }
-        }
-
-        // Return null if no user with the specified username is found
-        System.out.println("User with username '" + username + "' not found.");
-        return null;
-    }
-
-
-    
-
-    public static void main(String[] args) {
-        String filePath = "C:\\Users\\mohamed\\OneDrive\\Desktop\\final\\profiles.json"; // Update with the correct path
-        int userId = 2; // Replace with the user ID you want to test
-
-        // Example: Accepting a friend request
-        acceptFriendRequest(filePath, userId, "3");  // Accept friend request from profile ID "3"
-
-        // Example: Deleting a friend request
-        deleteFriendRequest(filePath, userId, "1");  // Delete friend request from profile ID "3"
-    }
-    
-    
 }

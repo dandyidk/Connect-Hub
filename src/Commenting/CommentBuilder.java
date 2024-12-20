@@ -15,7 +15,7 @@ import ContentCreation.json;
 import NotificationSystem.Observer;
 
 
-public class CommentBuilder implements FILELOCATION,Observer {
+public class CommentBuilder implements FILELOCATION {
     private String text;
     private String id;
     private ContentMedia post;
@@ -24,10 +24,7 @@ public class CommentBuilder implements FILELOCATION,Observer {
         this.id = id;
         this.post = post;
     }
-    @Override
-    public void update(){
-
-    }
+    
     @SuppressWarnings("unchecked")
     public void buildComment(){
         JSONObject js= new JSONObject();
