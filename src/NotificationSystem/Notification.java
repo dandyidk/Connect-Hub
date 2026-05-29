@@ -389,14 +389,14 @@ public class Notification implements FILELOCATION,NotificationInterface {
     
 
     public static void main(String[] args) {
-        String filePath = "C:\\Users\\mohamed\\OneDrive\\Desktop\\final\\profiles.json"; // Update with the correct path
+        String filePath = DATABASE; // Uses the centralized FILELOCATION constant
         int userId = 2; // Replace with the user ID you want to test
 
         // Example: Accepting a friend request
-        acceptFriendRequest(filePath, userId, "3");  // Accept friend request from profile ID "3"
+        acceptFriendRequest(filePath, userId, "3");
 
         // Example: Deleting a friend request
-        deleteFriendRequest(filePath, userId, "1");  // Delete friend request from profile ID "3"
+        deleteFriendRequest(filePath, userId, "1");
     }
     
     

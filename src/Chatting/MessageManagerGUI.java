@@ -174,12 +174,4 @@ public class MessageManagerGUI extends JFrame implements FILELOCATION {
             }
         }
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            // Example: Sender ID = "2", Receiver ID = "1"
-            MessageManagerGUI gui = new MessageManagerGUI("2", "1");
-            gui.setVisible(true);
-        });
-    }
 }

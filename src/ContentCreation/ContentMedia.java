@@ -1,49 +1,101 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ * ContentMedia.java
+ * Base class for all timestamped user-generated content (posts, stories, group content).
  */
 package ContentCreation;
 
-
 import java.util.Date;
-import java.util.Calendar; 
+import java.util.Calendar;
+
+/**
+ * Represents a piece of user-generated content with metadata including
+ * a unique ID, the author's user ID, a creation timestamp, and the content body.
+ * <p>
+ * This serves as the base class for {@link Post} and {@link Story}, providing
+ * common fields and constructors for content lifecycle management.
+ *
+ * @author ahmed
+ * @see Post
+ * @see Story
+ * @see Content
+ */
 public class ContentMedia {
+
+    /** Unique identifier for this content item. */
     protected String contentId;
+
+    /** The user ID of the content author. */
     protected String authorId;
+
+    /** The timestamp when this content was created. */
     protected Date timeStamp;
+
+    /** The actual content body (text + optional image). */
     protected Content content;
 
-    public ContentMedia(String contentId,String authorID,Date timeStamp,Content content){
+    /**
+     * Creates a ContentMedia with all fields specified.
+     *
+     * @param contentId the unique content identifier
+     * @param authorID  the author's user ID
+     * @param timeStamp the creation timestamp
+     * @param content   the content body
+     */
+    public ContentMedia(String contentId, String authorID, Date timeStamp, Content content) {
         this.contentId = contentId;
         this.authorId = authorID;
         this.timeStamp = timeStamp;
         this.content = content;
     }
-    public ContentMedia(String contentId,String authorID,Content content){
+
+    /**
+     * Creates a ContentMedia with an auto-generated timestamp (current time).
+     *
+     * @param contentId the unique content identifier
+     * @param authorID  the author's user ID
+     * @param content   the content body
+     */
+    public ContentMedia(String contentId, String authorID, Content content) {
         this.contentId = contentId;
         this.authorId = authorID;
         this.timeStamp = Calendar.getInstance().getTime();
         this.content = content;
     }
-    public ContentMedia(String authorID,Content content){
+
+    /**
+     * Creates a ContentMedia without a content ID (assigned later).
+     *
+     * @param authorID the author's user ID
+     * @param content  the content body
+     */
+    public ContentMedia(String authorID, Content content) {
         this.authorId = authorID;
         this.timeStamp = Calendar.getInstance().getTime();
         this.content = content;
     }
 
-    public String getUserId(){
+    /** @return the author's user ID */
+    public String getUserId() {
         return this.authorId;
     }
-    public void setContentId(String x){
+
+    /** @param x the content ID to assign */
+    public void setContentId(String x) {
         this.contentId = x;
     }
-    public String getContentId(){
+
+    /** @return the unique content identifier */
+    public String getContentId() {
         return this.contentId;
     }
-    public String getTimeStamp(){
+
+    /** @return the creation timestamp as a formatted string */
+    public String getTimeStamp() {
         return this.timeStamp.toString();
     }
-    public Content getContent(){
+
+    /** @return the content body (text + optional image) */
+    public Content getContent() {
         return this.content;
     }
 }

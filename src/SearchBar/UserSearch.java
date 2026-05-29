@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import ContentCreation.Profile;
-import ContentCreation.User;
 import ContentCreation.json;
 import GroupManagement.Group;
 

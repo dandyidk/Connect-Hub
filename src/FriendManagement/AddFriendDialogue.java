@@ -118,28 +118,44 @@ public class AddFriendDialogue extends javax.swing.JDialog {
     private void CancelActionPerformed(java.awt.event.ActionEvent evt){
         dispose();
     }
-    private void AddfriendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddfriendActionPerformed
-        Profile profile = new Profile(getName(), getTitle(), getWarningString(), getName()); //just to initialize somthin lol
-        
+    private void AddfriendActionPerformed(java.awt.event.ActionEvent evt) {
         String name = Username.getText();
         String ID = UserID.getText();
-        if(json.readProfiles().containsKey(ID)){
+        Profile profile = null;
+
+        if (ID != null && !ID.isEmpty() && json.readProfiles().containsKey(ID)) {
             profile = json.readProfiles().get(ID);
-        }
-        else{
-            HashMap <String,Profile>profiletemp = json.readProfiles();
-            for(int i = 0;i<profiletemp.size();i++){
-                if(profiletemp.get(Integer.toString(i)).getUsername().compareTo(name)==0){
-                    profile = profiletemp.get(Integer.toString(i));
+        } else if (name != null && !name.isEmpty()) {
+            HashMap<String, Profile> profiletemp = json.readProfiles();
+            for (Profile p : profiletemp.values()) {
+                if (p.getUsername().compareTo(name) == 0) {
+                    profile = p;
+                    break;
                 }
             }
         }
+
+        if (profile == null) {
+            Message m = new Message(null, true, "User not found.");
+            m.setLocationRelativeTo(this);
+            m.setVisible(true);
+            return;
+        }
+        
+        // Prevent sending friend request to oneself
+        if (profile.getUserId().compareTo(this.user.getUserId()) == 0) {
+            Message m = new Message(null, true, "You cannot add yourself as a friend.");
+            m.setLocationRelativeTo(this);
+            m.setVisible(true);
+            return;
+        }
+
         FriendRequests Fr = new FriendRequests("Pending", profile, this.user);
         Fr.sendFriendRequest();
-        Message m = new Message(null, true,"Friend request sent");
+        Message m = new Message(null, true, "Friend request sent");
         m.setLocationRelativeTo(this);
         m.setVisible(true);
-    }//GEN-LAST:event_AddfriendActionPerformed
+    }
 
     /**
      * @param args the command line arguments

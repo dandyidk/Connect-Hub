@@ -1,4 +1,77 @@
+# ═══════════════════════════════════════════════════════════════
+#  Connect-Hub .gitignore
+#  Comprehensive exclusions for Java, NetBeans, IDEs, and OS files
+# ═══════════════════════════════════════════════════════════════
+
+# ─── Compiled Java Class Files ────────────────────────────────
+*.class
+
+# ─── Package/Archive Files ────────────────────────────────────
+*.jar
+*.war
+*.ear
+*.nar
+!lib/*.jar
+
+# ─── Build Output Directories ─────────────────────────────────
 /build/
-/Searches/nbproject/private/
-/SearchBar/nbproject/private/
-/Notfication/nbproject/private/
+/dist/
+/out/
+/target/
+/bin/
+
+# ─── NetBeans IDE ─────────────────────────────────────────────
+/nbproject/private/
+nbbuild/
+nbdist/
+.nb-gradle/
+
+# ─── IntelliJ IDEA ───────────────────────────────────────────
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# ─── Eclipse IDE ─────────────────────────────────────────────
+.classpath
+.project
+.settings/
+
+# ─── VS Code ─────────────────────────────────────────────────
+.vscode/
+
+# ─── Maven ───────────────────────────────────────────────────
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# ─── Gradle ──────────────────────────────────────────────────
+.gradle/
+gradle/
+gradlew
+gradlew.bat
+
+# ─── OS Generated Files ─────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ─── Log Files ───────────────────────────────────────────────
+*.log
+
+# ─── Temporary Files ────────────────────────────────────────
+*.swp
+*.swo
+*~

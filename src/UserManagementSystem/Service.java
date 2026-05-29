@@ -1,14 +1,21 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
+ * Service.java
+ * Interface defining authentication operations for the Connect-Hub application.
  */
 package UserManagementSystem;
 
 /**
+ * Defines the contract for user authentication services.
+ * Implemented by {@link User} to provide login and signup functionality.
  *
  * @author ahmed
+ * @see User
  */
 public interface Service {
-  public void login();
-  public void signup();
+
+    /** Authenticates the user and updates their online status. */
+    public void login();
+
+    /** Registers a new user account and persists it to the database. */
+    public void signup();
 }

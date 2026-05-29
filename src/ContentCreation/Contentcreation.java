@@ -1,12 +1,20 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ * Contentcreation.java
+ * Strategy interface for content creation (Post, Story, etc.).
  */
+package ContentCreation;
 
- package ContentCreation;
-
-
-
+/**
+ * Strategy interface implemented by all content types that can be
+ * created and persisted to the JSON database.
+ *
+ * @see Post
+ * @see Story
+ */
 public interface Contentcreation {
+
+    /**
+     * Creates and persists this content item to the database.
+     */
     public void createContent();
 }

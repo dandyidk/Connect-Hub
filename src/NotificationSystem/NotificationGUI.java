@@ -134,7 +134,7 @@ friendRequestPanel.add(requestPanel);
 }
 
     public static void main(String[] args) {
-        String filePath = "C:\\Users\\mohamed\\OneDrive\\Desktop\\final\\profiles.json"; 
+        String filePath = ContentCreation.FILELOCATION.DATABASE; // Uses centralized path constant
         int userId = 2;
 
         new NotificationGUI(filePath, userId);

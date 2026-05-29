@@ -1,0 +1,12 @@
+{"chats": [{
+    "messages": [{
+        "messageText": "hi",
+        "senderId": "1",
+        "receiverId": "0",
+        "timestamp": "Fri May 29 23:06:39 EEST 2026"
+    }],
+    "users": [
+        "1",
+        "0"
+    ]
+}]}

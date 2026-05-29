@@ -13,8 +13,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
-import javax.print.DocFlavor.STRING;
-
 import GroupManagement.Admin;
 import GroupManagement.Group;
 import GroupManagement.GroupRequest;
